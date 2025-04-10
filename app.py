@@ -5,12 +5,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 import uuid
+import match_logic
+from match_logic import find_best_match
+from spotify_app import register_spotify_routes
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///music_platform.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/profile_images'
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB max upload size
+register_spotify_routes(app)
 
 # Ensure the upload folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -88,7 +93,7 @@ def update_user(user_id):
         if existing_user:
             return jsonify({"error": "Username already exists"}), 409
         user.username = data['username']
-    s
+    
     if 'password' in data:
         user.password_hash = generate_password_hash(data['password'])
     
@@ -147,6 +152,27 @@ def list_users():
         "description": user.description,
         "profile_image": user.profile_image
     } for user in users])
+
+@app.route('/match/<int:user_id>', methods=['GET'])
+def match(user_id):
+    users_data = [{
+        'id': user.id,
+        'name': user.username,
+        'description': user.description
+    } for user in User.query.all()]
+    
+    best_match, percentage = find_best_match(user_id, users_data)
+    
+    if best_match is None:
+        return jsonify({'error': 'User not found or no match available'}), 404
+    
+    return jsonify({
+        'match_id': best_match['id'],
+        'match_name': best_match['name'],
+        'match_percentage': percentage
+    })
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
