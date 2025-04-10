@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple DMs</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    #chat-container {
+      transition: background 0.3s ease-in-out;
+    }
+    .chat-bubble {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #e2e8f0;
+      border-radius: 1rem;
+      max-width: 75%;
+      word-wrap: break-word;
+    }
+    .glitter-avatar:hover {
+      box-shadow: 0 0 10px 4px #ff69b4, 0 0 20px 10px #ffc0cb;
+      transition: 0.3s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-gray-100" id="page-body">
+  <div class="max-w-xl mx-auto mt-10 p-4 shadow-lg rounded-lg" id="chat-container" style="background-color: #ffffff;">
+    <div class="mb-2">
+      <label for="username" class="block text-sm font-bold mb-1">Enter Your Name:</label>
+      <input id="username" type="text" placeholder="Your name..." class="w-full mb-3 p-2 border rounded" />
+
+      <!-- Avatar Picker -->
+      <label for="avatar-picker" class="block text-sm font-bold mb-1">Choose Your Avatar:</label>
+      <select id="avatar-picker" class="w-full mb-3 p-2 border rounded">
+  <option selected value="https://i.imgur.com/lnJjUUL.jpeg">Star Orbit (Imgur)</option>
+  <option value="https://i.imgur.com/dNKCcT0.png">Purple Sparkle Crown</option>
+  <option value="https://i.imgur.com/27I4VOc.jpeg">Blush Bloom</option>
+  <option value="https://i.imgur.com/7UxFjK9.jpeg">DreamCore Drip</option>
+</select>
+
+      <!-- Glitter Picker -->
+      <label for="glitter-picker" class="block text-sm font-bold mb-1">Choose Glitter Effect:</label>
+      <select id="glitter-picker" class="w-full mb-3 p-2 border rounded">
+        <option value="">None</option>
+        <option value="https://i.imgur.com/MZ3Wy6Y.gif">Pink Sparkle</option>
+        <option value="https://i.imgur.com/yXsovJH.gif">Gold Glitter</option>
+        <option value="https://i.imgur.com/RtrZ7kM.gif">Blue Fire</option>
+      </select>
+
+      <label for="bg-picker" class="block text-sm font-bold mb-1">Choose Chat Background:</label>
+      <select id="bg-picker" class="w-full mb-3 p-2 border rounded">
+        <option value="#ffffff">White</option>
+        <option value="#ffccf9">Pink</option>
+        <option value="#d0f0fd">Sky Blue</option>
+        <option value="url('https://i.imgur.com/Qs9eUjT.jpg')">MySpace Theme (Image)</option>
+      </select>
+
+      <label for="page-bg-picker" class="block text-sm font-bold mb-1">Choose Website Background:</label>
+      <select id="page-bg-picker" class="w-full p-2 border rounded">
+        <option value="">Default</option>
+        <option value="url('https://static-www.adweek.com/wp-content/uploads/2023/02/Messenger-Valentines-Day-Chat-Theme-Hero.png?w=600&h=315&crop=1')">Valentine Y2K</option>
+        <option value="url('https://img.bizbash.com/files/base/bizbash/bzb/image/2023/07/16_copy.64a84870b6345.png?auto=format%2Ccompress&q=70&w=400')">BizBash Neon</option>
+        <option value="url('https://themeplaza.art/download/58513/preview')">ThemePlaza Preview</option>
+        <option value="url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPhJWmno0HBArrU88WwR1O6KYZXoAfcNwK-w&s')">Y2K Vibes</option>
+      </select>
+    </div>
+
+    <div id="messages" class="h-96 overflow-y-scroll space-y-2 p-2 border border-gray-200 rounded bg-opacity-60"></div>
+
+    <input id="chat-input" type="text" placeholder="Type your message..."
+      class="w-full mt-3 p-2 border border-gray-300 rounded" />
+  </div>
+
+  <script>
+    const avatarPicker = document.getElementById('avatar-picker');
+    const glitterPicker = document.getElementById('glitter-picker');
+    const chatInput = document.getElementById('chat-input');
+    const bgPicker = document.getElementById('bg-picker');
+    const pageBgPicker = document.getElementById('page-bg-picker');
+    const chatContainer = document.getElementById('chat-container');
+    const pageBody = document.getElementById('page-body');
+    const usernameInput = document.getElementById('username');
+    const messagesDiv = document.getElementById('messages');
+
+    const fetchMessages = async () => {
+      const res = await fetch('http://localhost:5000/messages');
+      const data = await res.json();
+      messagesDiv.innerHTML = '';
+      data.forEach(({ user, message, avatar }) => {
+        const glitter = glitterPicker.value;
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble bg-blue-100';
+        bubble.innerHTML = `
+          <div class="relative w-6 h-6">
+            <img src="${avatar}" class="w-6 h-6 rounded-full absolute z-10" />
+            ${glitter ? `<img src="${glitter}" class="w-6 h-6 rounded-full absolute z-20 pointer-events-none" />` : ''}
+          </div>
+          <div><strong>${user}:</strong> ${message}</div>
+        `;
+        messagesDiv.appendChild(bubble);
+      });
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    };
+
+    setInterval(fetchMessages, 2000);
+    fetchMessages();
+
+    chatInput.addEventListener('keypress', async (e) => {
+      if (e.key === 'Enter' && chatInput.value.trim()) {
+        const msg = chatInput.value.trim();
+        const user = usernameInput.value.trim() || 'Anonymous';
+        const avatar = avatarPicker.value;
+
+        await fetch('http://localhost:5000/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user, message: msg, avatar })
+        });
+
+        chatInput.value = '';
+        fetchMessages();
+      }
+    });
+
+    bgPicker.addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val.startsWith('url')) {
+        chatContainer.style.background = val;
+        chatContainer.style.backgroundSize = 'cover';
+      } else {
+        chatContainer.style.background = val;
+      }
+    });
+
+    pageBgPicker.addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val.startsWith('url')) {
+        pageBody.style.backgroundImage = val;
+        pageBody.style.backgroundSize = 'cover';
+      } else {
+        pageBody.style.background = val;
+        pageBody.style.backgroundImage = '';
+      }
+    });
+  </script>
+</body>
+</html>
