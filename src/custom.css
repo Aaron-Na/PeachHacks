@@ -1,0 +1,113 @@
+/* Loading animation for profile view and friends list */
+.loading-disc {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 4px solid rgba(0, 255, 255, 0.1);
+  border-top-color: #00FFFF;
+  animation: spin 1s infinite linear;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Custom scrollbar for lists */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(192, 192, 192, 0.1);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #FF1493, #00FFFF);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #00FFFF, #FF1493);
+}
+
+/* Holographic card effects */
+.holographic-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1A1A2E, #0E0E1A);
+  border: 2px solid rgba(192, 192, 192, 0.8);
+  border-radius: 8px;
+}
+
+.holographic-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 20, 147, 0.1) 0%,
+    rgba(0, 255, 255, 0.1) 25%,
+    rgba(57, 255, 20, 0.1) 50%,
+    rgba(155, 48, 255, 0.1) 75%,
+    rgba(255, 20, 147, 0.1) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Like/Dislike Animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.like-animation {
+  animation: pulse 0.5s ease-in-out;
+}
+
+/* Friend card hover effects */
+.friend-card:hover, .user-card:hover {
+  box-shadow: 0 0 15px rgba(255, 20, 147, 0.5), 0 0 30px rgba(0, 255, 255, 0.3);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Chrome orb button - already defined in main CSS, just for reference */
+.chrome-orb-button {
+  background: linear-gradient(to right, #FF1493, #00FFFF);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 20, 147, 0.5), 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+.chrome-orb-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(255, 20, 147, 0.7), 0 0 30px rgba(0, 255, 255, 0.5);
+}
