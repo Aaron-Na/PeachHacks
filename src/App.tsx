@@ -1,7 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSpring, animated, useTrail } from '@react-spring/web';
-import { Music2, Users, UserCog, Sparkles, LogIn, Star, Heart, Disc, Play, Square, PlusSquare } from 'lucide-react';
+import { Music2, Users, UserCog, Sparkles, LogIn, Star, Heart, Disc, Play, Square, PlusSquare, UserSearch } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import ProfileCreation from './ProfileCreation';
+import ProfileView from './ProfileView';
+import FriendsList from './FriendsList';
+import UsersList from './UsersList';
 
 // Component for animated Y2K cursor trail
 const CursorTrail = () => {
@@ -159,7 +163,23 @@ const FeatureCard = ({ icon: Icon, title, description, buttonText, color }:
 
 function App() {
   const [showLoginMenu, setShowLoginMenu] = useState(false);
+  const [showProfileCreation, setShowProfileCreation] = useState(false);
+  const [showFriendsList, setShowFriendsList] = useState(false);
+  const [showUsersList, setShowUsersList] = useState(false);
+  const [viewedProfileId, setViewedProfileId] = useState<number | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userProfile, setUserProfile] = useState<any>(null);
   const loginRef = useRef<HTMLDivElement>(null);
+
+  // Check if user is logged in on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    
+    if (token && userId) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   // Close login menu when clicking outside
   useEffect(() => {
@@ -179,6 +199,31 @@ function App() {
     to: { opacity: 1, transform: 'translateY(0)' },
     config: { tension: 300, friction: 20 },
   });
+
+  // Handle profile creation success
+  const handleProfileCreationSuccess = (userData: any) => {
+    setIsLoggedIn(true);
+    setUserProfile(userData);
+    setShowProfileCreation(false);
+  };
+
+  // Handle viewing a profile
+  const handleViewProfile = (profileId: number) => {
+    setViewedProfileId(profileId);
+    setShowUsersList(false);
+  };
+
+  // Handle profile like
+  const handleProfileLike = () => {
+    // Notification could be added here
+    console.log('Profile liked and added to friends!');
+  };
+
+  // Handle profile dislike
+  const handleProfileDislike = () => {
+    // Notification could be added here
+    console.log('Profile disliked');
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-deep-space">
@@ -208,22 +253,51 @@ function App() {
           </div>
           
           <div className="flex items-center space-x-4">
-            <div className="hidden md:flex items-center space-x-3">
-              <NavMenuItem icon={Users} label="Friends" />
-              <NavMenuItem icon={Disc} label="Discover" />
-              <Link to="/profile" className="no-underline">
-                <NavMenuItem icon={UserCog} label="Profile" />
-              </Link>
-            </div>
+            {isLoggedIn ? (
+              <div className="hidden md:flex items-center space-x-3">
+                <div 
+                  className="cursor-pointer"
+                  onClick={() => setShowFriendsList(!showFriendsList)}
+                >
+                  <NavMenuItem icon={Users} label="Friends" />
+                </div>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => setShowUsersList(!showUsersList)}
+                >
+                  <NavMenuItem icon={UserSearch} label="Find Users" />
+                </div>
+                <div 
+                  className="cursor-pointer"
+                  onClick={() => setShowProfileView(!showProfileView)}
+                >
+                  <NavMenuItem icon={UserCog} label="Profile" />
+                </div>
+                <NavMenuItem icon={Disc} label="Discover" />
+              </div>
+            ) : (
+              <div className="hidden md:flex items-center space-x-3">
+                <NavMenuItem icon={Disc} label="Discover" />
+              </div>
+            )}
             
             <div className="relative" ref={loginRef}>
-              <button 
-                className="chrome-button flex items-center space-x-2"
-                onClick={() => setShowLoginMenu(!showLoginMenu)}
-              >
-                <LogIn className="w-5 h-5" />
-                <span>Connect Spotify</span>
-              </button>
+              {isLoggedIn ? (
+                <button 
+                  className="chrome-button flex items-center space-x-2"
+                >
+                  <UserCog className="w-5 h-5" />
+                  <span>My Profile</span>
+                </button>
+              ) : (
+                <button 
+                  className="chrome-button flex items-center space-x-2"
+                  onClick={() => setShowProfileCreation(true)}
+                >
+                  <LogIn className="w-5 h-5" />
+                  <span>Sign Up</span>
+                </button>
+              )}
               
               {showLoginMenu && (
                 <div className="absolute right-0 mt-2 w-64 py-2 bg-[#1A1A2E]/90 backdrop-blur-lg border-2 border-[#C0C0C0] rounded-lg shadow-xl z-[100]">
@@ -381,6 +455,37 @@ function App() {
         alt="Under Construction" 
         className="absolute bottom-4 right-4 w-24 h-24 z-10" 
       />
+
+      {/* Modal Components */}
+      {showProfileCreation && (
+        <ProfileCreation 
+          onClose={() => setShowProfileCreation(false)} 
+          onSuccess={handleProfileCreationSuccess}
+        />
+      )}
+      
+      {viewedProfileId !== null && (
+        <ProfileView 
+          profileId={viewedProfileId}
+          onClose={() => setViewedProfileId(null)}
+          onLike={handleProfileLike}
+          onDislike={handleProfileDislike}
+        />
+      )}
+      
+      {showFriendsList && (
+        <FriendsList 
+          onClose={() => setShowFriendsList(false)}
+          onViewProfile={handleViewProfile}
+        />
+      )}
+      
+      {showUsersList && (
+        <UsersList 
+          onClose={() => setShowUsersList(false)}
+          onViewProfile={handleViewProfile}
+        />
+      )}
     </div>
   );
 }
