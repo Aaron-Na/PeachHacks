@@ -209,7 +209,9 @@ function App() {
           
           <div className="flex items-center space-x-4">
             <div className="hidden md:flex items-center space-x-3">
-              <NavMenuItem icon={Users} label="Friends" />
+              <Link to="/friends" className="no-underline">
+                <NavMenuItem icon={Users} label="Friends" />
+              </Link>
               <NavMenuItem icon={Disc} label="Discover" />
               <Link to="/profile" className="no-underline">
                 <NavMenuItem icon={UserCog} label="Profile" />

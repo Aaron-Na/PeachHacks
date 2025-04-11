@@ -50,7 +50,7 @@ const friendsData = [
   }
 ];
 
-const FriendsPage = () => {
+const Friends = () => {
   // Page fade-in animation
   const fadeIn = useSpring({
     from: { opacity: 0, transform: 'translateY(20px)' },
@@ -196,4 +196,4 @@ const FriendsPage = () => {
 };
 
 
-export default FriendsPage;
+export default Friends;
