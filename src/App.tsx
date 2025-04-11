@@ -3,6 +3,14 @@ import { useSpring, animated, useTrail } from '@react-spring/web';
 import { Music2, Users, UserCog, Sparkles, LogIn, Star, Heart, Disc, Play, Square, PlusSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+interface Friend {
+  id: number;
+  username: string;
+  display_name?: string;
+  profile_image?: string;
+  bio?: string;
+}
+
 // Component for animated Y2K cursor trail
 const CursorTrail = () => {
   const [trail, setTrail] = useState<{ x: number, y: number, id: number }[]>([]);
@@ -159,7 +167,16 @@ const FeatureCard = ({ icon: Icon, title, description, buttonText, color }:
 
 function App() {
   const [showLoginMenu, setShowLoginMenu] = useState(false);
+  const [friends, setFriends] = useState<Friend[]>([]);
   const loginRef = useRef<HTMLDivElement>(null);
+
+  // Fetch friends list
+  useEffect(() => {
+    fetch('http://localhost:5000/api/friends')
+      .then(response => response.json())
+      .then(data => setFriends(data.friends))
+      .catch(error => console.error('Error fetching friends:', error));
+  }, []);
 
   // Close login menu when clicking outside
   useEffect(() => {
@@ -300,51 +317,73 @@ function App() {
           
           {/* Feature Cards */}
           <div className="grid md:grid-cols-3 gap-8 mt-16">
-            <FeatureCard 
-              icon={Users} 
-              title="Match Making" 
-              description="Find friends based on your music taste and shared vibes" 
-              buttonText="Find Matches"
-              color="from-[#ff77aa] to-[#7f5fc5]"
-            />
+            <Link to="/friends" className="block">
+              <FeatureCard 
+                icon={Users} 
+                title="Friends" 
+                description="Connect with fellow music lovers and share your favorite tunes" 
+                buttonText="Find Friends"
+                color="from-[#ff77aa] to-[#7f5fc5]"
+              />
+            </Link>
             
-            <FeatureCard 
-              icon={UserCog} 
-              title="Profile Management" 
-              description="Customize your Y2K inspired digital ID card"
-              buttonText="Edit Profile"
-              color="from-[#00B4B4] to-[#3adfd4]"
-            />
+            <Link to="/profile" className="block">
+              <FeatureCard 
+                icon={UserCog} 
+                title="Profile Management" 
+                description="Customize your Y2K inspired digital ID card"
+                buttonText="Edit Profile"
+                color="from-[#00B4B4] to-[#3adfd4]"
+              />
+            </Link>
             
-            <FeatureCard 
-              icon={Sparkles} 
-              title="Music Discovery" 
-              description="Find your next favorite song through your new connections"
-              buttonText="Explore Music"
-              color="from-[#ff77aa] to-[#00B4B4]"
-            />
+            <Link to="/discover" className="block">
+              <FeatureCard 
+                icon={Sparkles} 
+                title="Music Discovery" 
+                description="Find your next favorite song through your new connections"
+                buttonText="Explore Music"
+                color="from-[#ff77aa] to-[#00B4B4]"
+              />
+            </Link>
           </div>
           
-          {/* MySpace-inspired Testimonials */}
+          {/* MySpace-inspired Top Friends */}
           <div className="mt-24 mb-16">
             <h2 className="text-3xl font-bold text-center text-white mb-8 pixel-font glow-text">Top Friends</h2>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((id) => (
-                <div key={id} className="friend-card p-4 border-2 border-[#C0C0C0] rounded-lg bg-[#1A1A2E]/60 backdrop-blur-sm">
-                  <div className="w-full aspect-square mb-2 bg-gradient-to-br from-[#7FD1DE] to-[#00B4B4] rounded-md overflow-hidden flex items-center justify-center">
-                    <div className="text-2xl font-bold text-white">#{id}</div>
-                  </div>
-                  <p className="text-white text-center pixel-body-font truncate">Music Friend {id}</p>
-                  <div className="flex justify-center mt-2">
-                    <div className="music-bars">
-                      <div className="bar bar1"></div>
-                      <div className="bar bar2"></div>
-                      <div className="bar bar3"></div>
+              {friends.slice(0, 4).map((friend) => (
+                <Link to={`/profile/${friend.id}`} key={friend.id} className="block">
+                  <div className="friend-card p-4 border-2 border-[#C0C0C0] rounded-lg bg-[#1A1A2E]/60 backdrop-blur-sm hover:border-[#39FF14] transition-colors group">
+                    <div className="w-full aspect-square mb-2 rounded-md overflow-hidden">
+                      <img 
+                        src={friend.profile_image || 'https://i.imgur.com/MZ3Wy6Y.gif'}
+                        alt={friend.username}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                      />
+                    </div>
+                    <p className="text-white text-center pixel-body-font truncate group-hover:text-[#39FF14]">{friend.username}</p>
+                    <div className="flex justify-center mt-2">
+                      <div className="music-bars">
+                        <div className="bar bar1"></div>
+                        <div className="bar bar2"></div>
+                        <div className="bar bar3"></div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
+              
+              {friends.length === 0 && (
+                <div className="col-span-4 text-center py-8">
+                  <Users className="w-12 h-12 mx-auto mb-4 text-[#C0C0C0]" />
+                  <p className="text-[#C0C0C0] pixel-body-font">No friends yet! Start connecting with other music lovers.</p>
+                  <Link to="/friends" className="chrome-orb-button inline-block mt-4 px-6 py-2">
+                    Find Friends
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
