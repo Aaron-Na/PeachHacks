@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSpring, animated, useTrail } from '@react-spring/web';
-import { Music2, Users, UserCog, Sparkles, LogIn, Star, Heart, Play, Square, PlusSquare } from 'lucide-react';
+import { Music2, Users, UserCog, Sparkles, LogIn, Star, Heart, Play, Square, PlusSquare, Headphones } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Component for animated Y2K cursor trail
@@ -110,13 +110,18 @@ const NavMenuItem = ({ icon: Icon, label }: { icon: React.ElementType, label: st
   
   return (
     <animated.div
-      className="flex flex-col items-center p-2 cursor-pointer"
+      className="flex flex-col items-center p-2 cursor-pointer relative"
       style={animationProps}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <Icon size={24} />
-      <span className="text-xs mt-1 font-bold">{label}</span>
+      <div className="relative z-10">
+        <Icon size={24} />
+        <span className="text-xs mt-1 font-bold">{label}</span>
+      </div>
+      {/* Y2K bubble shine effect */}
+      <div className={`absolute inset-0 rounded-full bg-gradient-to-r from-[#ff77aa]/10 to-[#3adfd4]/10 ${hovered ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 backdrop-blur-sm`}></div>
+      <div className={`absolute top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 rounded-full bg-white/50 ${hovered ? 'opacity-80' : 'opacity-0'} transition-opacity duration-300`}></div>
     </animated.div>
   );
 };
@@ -142,8 +147,12 @@ const FeatureCard = ({ icon: Icon, title, description, buttonText, color, link }
       style={springProps}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="relative p-6 border-2 border-[#C0C0C0] rounded-lg bg-[#1A1A2E]/60 backdrop-blur-sm"
+      className="relative p-6 border-2 border-[#C0C0C0] rounded-lg bg-[#1A1A2E]/60 backdrop-blur-sm overflow-hidden"
     >
+      {/* Y2K bubble shine effect */}
+      <div className="absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-white/20 to-transparent rounded-t-lg"></div>
+      <div className="absolute top-4 left-4 w-4 h-4 rounded-full bg-white/30 blur-sm"></div>
+      <div className="absolute top-2 right-8 w-2 h-2 rounded-full bg-white/40"></div>
       <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-10 rounded-lg`} />
       <div className="relative z-10">
         <Icon className="w-12 h-12 text-white mb-4" />
@@ -159,7 +168,9 @@ const FeatureCard = ({ icon: Icon, title, description, buttonText, color, link }
 
 function App() {
   const [showLoginMenu, setShowLoginMenu] = useState(false);
+  const [showListeningPartyMenu, setShowListeningPartyMenu] = useState(false);
   const loginRef = useRef<HTMLDivElement>(null);
+  const listeningPartyRef = useRef<HTMLDivElement>(null);
 
   // Close login menu when clicking outside
   useEffect(() => {
@@ -167,10 +178,13 @@ function App() {
       if (loginRef.current && !loginRef.current.contains(event.target as Node)) {
         setShowLoginMenu(false);
       }
+      if (listeningPartyRef.current && !listeningPartyRef.current.contains(event.target as Node)) {
+        setShowListeningPartyMenu(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [loginRef]);
+  }, [loginRef, listeningPartyRef]);
 
   // Animated title with trail effect
   const titleWords = ['Find', 'Your', 'Music', 'Soul', 'Mates'];
@@ -205,6 +219,9 @@ function App() {
               <div className="absolute inset-0 bg-[#ff77aa]/30 blur-lg transform scale-150" />
             </div>
             <span className="text-white text-2xl font-bold pixel-font glow-text">MusicMate</span>
+            {/* Y2K bubble effect behind logo */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-[#ff77aa]/10 via-[#ffffff]/5 to-[#3adfd4]/10 rounded-full blur-sm -z-10"></div>
+            <div className="absolute top-1 left-12 w-3 h-3 rounded-full bg-white/40 -z-5"></div>
           </div>
           
           <div className="flex items-center space-x-4">
@@ -215,15 +232,50 @@ function App() {
               <Link to="/profile" className="no-underline">
                 <NavMenuItem icon={UserCog} label="Profile" />
               </Link>
+              
+              {/* Listening Party Button & Menu */}
+              <div className="relative" ref={listeningPartyRef}>
+                <div 
+                  onClick={() => setShowListeningPartyMenu(!showListeningPartyMenu)}
+                  className="no-underline"
+                >
+                  <NavMenuItem icon={Headphones} label="Party" />
+                </div>
+                
+                {showListeningPartyMenu && (
+                  <div className="absolute right-0 mt-2 w-64 py-2 bg-[#1A1A2E]/90 backdrop-blur-lg border-2 border-[#C0C0C0] rounded-lg shadow-xl z-[100]">
+                    <div className="px-4 py-2 border-b border-[#C0C0C0]/50">
+                      <p className="text-[#3adfd4] text-sm pixel-body-font">Listening Party Options:</p>
+                    </div>
+                    <div 
+                      className="px-4 py-3 hover:bg-[#ff77aa]/20 transition-colors cursor-pointer flex items-center"
+                      onClick={() => setShowListeningPartyMenu(false)}
+                    >
+                      <Play className="w-5 h-5 text-[#ff77aa] mr-2" />
+                      <p className="text-white pixel-body-font">Start a Listening Party</p>
+                    </div>
+                    <div 
+                      className="px-4 py-3 hover:bg-[#ff77aa]/20 transition-colors cursor-pointer flex items-center"
+                      onClick={() => setShowListeningPartyMenu(false)}
+                    >
+                      <Users className="w-5 h-5 text-[#3adfd4] mr-2" />
+                      <p className="text-white pixel-body-font">Join a Listening Party</p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
             
             <div className="relative" ref={loginRef}>
               <button 
-                className="chrome-button flex items-center space-x-2"
+                className="chrome-button flex items-center space-x-2 relative overflow-hidden"
                 onClick={() => setShowLoginMenu(!showLoginMenu)}
               >
-                <LogIn className="w-5 h-5" />
-                <span>Connect Spotify</span>
+                {/* Y2K bubble shine effect */}
+                <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white/30 to-transparent rounded-t-lg"></div>
+                <div className="absolute top-1 right-1/4 w-2 h-2 rounded-full bg-white/40"></div>
+                <LogIn className="w-5 h-5 relative z-10" />
+                <span className="relative z-10">Connect Spotify</span>
               </button>
               
               {showLoginMenu && (
@@ -281,17 +333,64 @@ function App() {
               </div>
             </div>
             
-            <div className="y2k-cd-player relative max-w-xs mx-auto mb-12">
-              <div className="cd-base relative w-64 h-64 rounded-full border-8 border-[#C0C0C0] bg-gradient-to-r from-[#1A1A2E] to-[#00B4B4] p-2 mx-auto">
-                <div className="cd-disc absolute inset-2 rounded-full bg-gradient-to-r from-[#1A1A2E] to-[#000] overflow-hidden flex items-center justify-center animate-spin-slow">
-                  <div className="cd-hole w-8 h-8 rounded-full bg-[#000] border-2 border-[#C0C0C0]"></div>
-                  <div className="cd-reflection absolute inset-0 bg-gradient-to-tr from-transparent via-[#C0C0C0]/10 to-[#C0C0C0]/30"></div>
+            <div className="y2k-minidisc-player relative max-w-xs mx-auto mb-12">
+              <div className="minidisc-container relative w-72 h-72 mx-auto">
+                {/* MiniDisc case - square with rounded corners */}
+                <div className="minidisc-case relative w-full h-full bg-[#0A1A40] rounded-lg border-4 border-[#1A2A50] p-3 shadow-lg">
+                  {/* Y2K bubble shine effect */}
+                  <div className="absolute top-0 right-0 w-full h-1/3 bg-gradient-to-b from-white/20 to-transparent rounded-t-lg"></div>
+                  <div className="absolute top-6 left-6 w-6 h-6 rounded-full bg-white/10 blur-sm"></div>
+                  <div className="absolute top-4 right-12 w-3 h-3 rounded-full bg-white/20"></div>
+                  
+                  {/* MiniDisc labels and branding */}
+                  <div className="absolute top-2 left-1/2 transform -translate-x-1/2 text-[#00E5FF] text-xs font-bold z-10 tracking-widest">
+                    INSERT THIS END
+                  </div>
+                  
+                  <div className="absolute top-4 right-2 text-[#00E5FF] text-2xl font-bold z-10">
+                    80
+                  </div>
+                  
+                  {/* Sony logo */}
+                  <div className="absolute right-4 top-1/3 w-20 h-14 bg-[#C12BDF] flex items-center justify-center rounded-md z-20">
+                    <span className="text-white text-xl font-bold tracking-wider">SONY</span>
+                  </div>
+                  
+                  {/* MiniDisc itself - with holographic/iridescent reflection */}
+                  <div className="minidisc absolute inset-10 rounded-full overflow-hidden animate-spin-slow z-10">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-[#00E5FF] via-[#C12BDF] to-[#00E5FF]"></div>
+                    
+                    {/* Holographic effect */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#C12BDF]/40 via-[#00E5FF]/70 to-transparent"></div>
+                    </div>
+                    
+                    {/* MiniDisc center hole */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-[#0A1A40] border-2 border-[#00E5FF]/70"></div>
+                    </div>
+                    
+                    {/* Technical text around disc */}
+                    <div className="absolute bottom-8 left-0 right-0 text-center">
+                      <span className="text-[#0A1A40] text-xs tracking-widest font-mono">ETTM01-8L-78175</span>
+                    </div>
+                  </div>
+                  
+                  {/* MD logo */}
+                  <div className="absolute bottom-2 left-2 text-[#00E5FF] font-bold">
+                    <div className="text-sm">M•D</div>
+                    <div className="text-xs">DiSC</div>
+                  </div>
+                  
+                  {/* Play button */}
+                  <div className="play-button absolute -bottom-4 right-4 transform translate-x-1/4 bg-[#C12BDF] rounded-full p-3 border-2 border-[#00E5FF] glow-effect cursor-pointer hover:bg-[#E04BFF] transition-colors">
+                    <Play className="w-5 h-5 text-white" />
+                  </div>
                 </div>
-                <div className="play-button absolute -bottom-4 right-0 transform translate-x-1/4 bg-[#ff77aa] rounded-full p-3 border-2 border-[#C0C0C0] glow-effect">
-                  <Play className="w-5 h-5 text-white" />
-                </div>
+                
+                {/* Shadow underneath */}
+                <div className="minidisc-shadow w-64 h-6 bg-black/30 blur-md rounded-full mx-auto mt-2"></div>
               </div>
-              <div className="cd-shadow w-64 h-8 bg-black/30 blur-md rounded-full mx-auto -mt-4"></div>
             </div>
             
             <div className="text-center max-w-4xl mx-auto">
@@ -338,26 +437,98 @@ function App() {
               />
             </div>
             
-            {/* MySpace-inspired Testimonials */}
+            {/* Discover Section */}
             <div className="mt-24 mb-16">
-              <h2 className="text-3xl font-bold text-center text-white mb-8 pixel-font glow-text">Top Friends</h2>
+              <h2 className="text-3xl font-bold text-center text-white mb-8 pixel-font glow-text">Discover</h2>
               
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {[1, 2, 3, 4].map((id) => (
-                  <div key={id} className="friend-card p-4 border-2 border-[#C0C0C0] rounded-lg bg-[#1A1A2E]/60 backdrop-blur-sm">
-                    <div className="w-full aspect-square mb-2 bg-gradient-to-br from-[#7FD1DE] to-[#00B4B4] rounded-md overflow-hidden flex items-center justify-center">
-                      <div className="text-2xl font-bold text-white">#{id}</div>
-                    </div>
-                    <p className="text-white text-center pixel-body-font truncate">Music Friend {id}</p>
-                    <div className="flex justify-center mt-2">
-                      <div className="music-bars">
-                        <div className="bar bar1"></div>
-                        <div className="bar bar2"></div>
-                        <div className="bar bar3"></div>
+              {/* Trending Songs Section */}
+              <div className="mb-10">
+                <h3 className="text-xl font-bold text-[#3adfd4] mb-4 pixel-body-font">Top Trending Songs</h3>
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                  {[1, 2, 3, 4, 5].map((id) => (
+                    <div 
+                      key={`song-${id}`} 
+                      className="song-card p-4 border-2 border-[#C0C0C0] rounded-lg bg-[#1A1A2E]/60 backdrop-blur-sm hover:bg-[#ff77aa]/20 transition-colors cursor-pointer"
+                    >
+                      <div className="w-full aspect-square mb-2 bg-gradient-to-br from-[#ff77aa] to-[#7f5fc5] rounded-md overflow-hidden flex items-center justify-center relative">
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                          <Play className="w-10 h-10 text-white opacity-70 hover:opacity-100 transition-opacity" />
+                        </div>
+                        <span className="absolute top-2 right-2 text-sm bg-[#ff77aa] text-white px-2 py-1 rounded-full">#{id}</span>
+                      </div>
+                      <p className="text-white font-medium pixel-body-font truncate">Trending Song {id}</p>
+                      <p className="text-[#C0C0C0] text-sm pixel-body-font truncate">Artist Name</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <div className="text-xs text-[#3adfd4]">
+                          {Math.floor(Math.random() * 50) + 10} friends
+                        </div>
+                        <div className="music-bars scale-75">
+                          <div className="bar bar1"></div>
+                          <div className="bar bar2"></div>
+                          <div className="bar bar3"></div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+              
+              {/* Trending Artists Section */}
+              <div className="mb-10">
+                <h3 className="text-xl font-bold text-[#3adfd4] mb-4 pixel-body-font">Top Trending Artists</h3>
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                  {[1, 2, 3, 4, 5].map((id) => (
+                    <div 
+                      key={`artist-${id}`} 
+                      className="artist-card p-4 border-2 border-[#C0C0C0] rounded-lg bg-[#1A1A2E]/60 backdrop-blur-sm hover:bg-[#00B4B4]/20 transition-colors cursor-pointer"
+                    >
+                      <div className="w-full aspect-square mb-2 bg-gradient-to-br from-[#00B4B4] to-[#3adfd4] rounded-full overflow-hidden flex items-center justify-center">
+                        <div className="text-xl font-bold text-white">{id}</div>
+                      </div>
+                      <p className="text-white font-medium text-center pixel-body-font truncate">Artist {id}</p>
+                      <p className="text-[#C0C0C0] text-sm text-center pixel-body-font truncate">Genre</p>
+                      <div className="flex items-center justify-center mt-2">
+                        <span className="bg-[#00B4B4] text-white text-xs px-2 py-1 rounded-full">
+                          {Math.floor(Math.random() * 50) + 10} friends listening
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Random Playlists Section */}
+              <div>
+                <h3 className="text-xl font-bold text-[#3adfd4] mb-4 pixel-body-font">Daily Friend Playlists</h3>
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                  {[1, 2, 3, 4, 5].map((id) => (
+                    <div 
+                      key={`playlist-${id}`} 
+                      className="playlist-card p-4 border-2 border-[#C0C0C0] rounded-lg bg-[#1A1A2E]/60 backdrop-blur-sm hover:bg-[#ff77aa]/20 transition-colors cursor-pointer"
+                    >
+                      <div className="w-full aspect-square mb-2 bg-gradient-to-br from-[#7f5fc5] to-[#ff77aa] rounded-md overflow-hidden flex items-center justify-center relative">
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                          <Play className="w-10 h-10 text-white opacity-70 hover:opacity-100 transition-opacity" />
+                        </div>
+                        <div className="absolute bottom-2 right-2 bg-[#7f5fc5] text-white text-xs px-2 py-1 rounded-full">
+                          {Math.floor(Math.random() * 15) + 5} tracks
+                        </div>
+                      </div>
+                      <p className="text-white font-medium pixel-body-font truncate">Friend {id}'s Playlist</p>
+                      <p className="text-[#C0C0C0] text-sm pixel-body-font truncate">Refreshed Today</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <div className="text-xs text-[#3adfd4]">
+                          Y2K Vibes
+                        </div>
+                        <div className="music-bars scale-75">
+                          <div className="bar bar1"></div>
+                          <div className="bar bar2"></div>
+                          <div className="bar bar3"></div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
