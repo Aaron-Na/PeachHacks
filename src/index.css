@@ -180,7 +180,26 @@
   }
 
   .bg-deep-space {
-    background: linear-gradient(135deg, #2c2e46 0%, #00B4B4 100%);
+    background-image: url('/images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  
+  .bg-deep-space::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+  
+  .bg-deep-space > * {
+    position: relative;
+    z-index: 2;
   }
 
   .bg-gradient {

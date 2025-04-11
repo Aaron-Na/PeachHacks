@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserPlus, User, KeyRound, FileText, Upload } from 'lucide-react';
+import { User, KeyRound, FileText, Upload } from 'lucide-react';
 import axios from 'axios';
 
 interface ProfileCreationProps {

@@ -8,7 +8,7 @@ import PrivateChat from '../components/PrivateChat';
 const profileData = {
   username: "Y2K_MusicLover",
   displayName: "Retro Beats",
-  profilePic: "https://i.pinimg.com/736x/b9/5e/0f/b95e0f5e9c56a998d58e7d7d067c8764.jpg",
+  profilePic: "/images/profiles/profile1.png",
   joinDate: "April 2025",
   topArtists: ["Daft Punk", "The Prodigy", "Kylie Minogue", "Britney Spears", "Backstreet Boys"],
   favoriteGenres: ["Eurodance", "Y2K Pop", "Trance", "Trip Hop"],
@@ -107,11 +107,23 @@ const ProfilePage = () => {
             >
               <div className="relative z-10">
                 <div className="relative">
-                  <img 
-                    src={profileData.profilePic} 
-                    alt="Profile" 
-                    className="w-32 h-32 rounded-full mx-auto border-4 border-[#FF80B2] object-cover"
-                  />
+                  <div className="w-32 h-32 rounded-full mx-auto border-4 border-[#FF80B2] overflow-hidden relative">
+                    {/* Y2K gradient background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#E63B3F] to-[#72BEFD]"></div>
+                    {/* Glossy highlight overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent"></div>
+                    {/* Bubble pattern overlay */}
+                    <div className="absolute inset-0 bubble-pattern opacity-20"></div>
+                    {/* Initial letter */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-4xl font-bold text-white pixel-font glow-text">
+                        {profileData.displayName[0]}
+                      </span>
+                    </div>
+                    {/* Y2K decorative elements */}
+                    <div className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-white/30 blur-sm"></div>
+                    <div className="absolute top-1 left-1 w-3 h-3 rounded-full bg-white/30 blur-sm"></div>
+                  </div>
                   <div className="absolute inset-0 border-4 border-[#00FFFF] rounded-full blur-sm opacity-50 animate-pulse-slow"></div>
                 </div>
                 
@@ -321,19 +333,19 @@ const ProfilePage = () => {
                     {
                       id: 2,
                       name: 'Alice',
-                      avatar: 'https://i.imgur.com/ZWfPm4o.png',
+                      avatar: '/images/profiles/profile1.png',
                       online: true
                     },
                     {
                       id: 3,
                       name: 'Bob',
-                      avatar: 'https://i.imgur.com/7tN7Txi.png',
+                      avatar: '/images/profiles/profile2.png',
                       online: false
                     },
                     {
                       id: 4,
                       name: 'Charlie',
-                      avatar: 'https://i.imgur.com/PHk8vHh.png',
+                      avatar: '/images/profiles/profile3.png',
                       online: true
                     }
                   ]}

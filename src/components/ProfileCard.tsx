@@ -51,7 +51,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, onLike, onDislike })
     >
       <div className="bg-[#1A1A2E] border-2 border-[#C0C0C0] rounded-xl overflow-hidden shadow-xl relative">
         {/* Profile Image */}
-        <div className="aspect-square w-full bg-gradient-to-br from-[#7FD1DE] to-[#00B4B4] flex items-center justify-center overflow-hidden">
+        <div className="aspect-square w-full bg-gradient-to-br from-[#7FD1DE] to-[#00B4B4] flex items-center justify-center overflow-hidden relative">
+          {/* Glossy overlay effect - Y2K style */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent z-10"></div>
           {profile.profilePic ? (
             <img 
               src={profile.profilePic} 
@@ -59,7 +61,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, onLike, onDislike })
               className="w-full h-full object-cover"
             />
           ) : (
-            <span className="text-6xl font-bold text-white pixel-font">{profile.displayName[0]}</span>
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#E63B3F] to-[#72BEFD] relative">
+              {/* Glossy overlay for gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent"></div>
+              {/* Y2K style bubble effect */}
+              <div className="absolute inset-0 bubble-pattern opacity-20"></div>
+              {/* First initial of name */}
+              <span className="text-8xl font-bold text-white pixel-font z-10 glow-text">
+                {profile.displayName[0]}
+              </span>
+              {/* Additional Y2K style elements */}
+              <div className="absolute bottom-4 right-4 w-16 h-16 rounded-full bg-white/20 blur-sm"></div>
+              <div className="absolute top-4 left-4 w-12 h-12 rounded-full bg-white/20 blur-sm"></div>
+            </div>
           )}
         </div>
 
@@ -76,15 +90,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, onLike, onDislike })
           <div className="flex justify-center space-x-4 mt-6">
             <button
               onClick={() => handleDragEnd('left')}
-              className="p-4 bg-[#FF4444]/20 hover:bg-[#FF4444]/40 rounded-full transition-colors"
+              className="p-4 bg-[#E63B3F]/20 hover:bg-[#E63B3F]/40 rounded-full transition-colors glass-panel"
             >
-              <X className="w-8 h-8 text-[#FF4444]" />
+              <X className="w-8 h-8 text-[#E63B3F]" />
             </button>
             <button
               onClick={() => handleDragEnd('right')}
-              className="p-4 bg-[#39FF14]/20 hover:bg-[#39FF14]/40 rounded-full transition-colors"
+              className="p-4 bg-[#72BEFD]/20 hover:bg-[#72BEFD]/40 rounded-full transition-colors glass-panel"
             >
-              <Heart className="w-8 h-8 text-[#39FF14]" />
+              <Heart className="w-8 h-8 text-[#72BEFD]" />
             </button>
           </div>
         </div>

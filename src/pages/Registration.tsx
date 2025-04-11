@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileCreation from '../components/ProfileCreation';
-import { UserPlus, Star, Heart, Square, PlusSquare } from 'lucide-react';
+import { Star, Heart, Square, PlusSquare } from 'lucide-react';
 
 // Y2K-inspired floating shapes component (similar to App.tsx)
 const FloatingShapes = () => {
@@ -42,7 +42,7 @@ const FloatingShapes = () => {
 const Registration: React.FC = () => {
   const navigate = useNavigate();
   
-  const handleProfileSuccess = (userData: any) => {
+  const handleProfileSuccess = () => {
     // After successful profile creation, navigate to profile page
     navigate('/profile');
   };

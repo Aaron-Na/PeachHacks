@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Sparkles } from 'lucide-react';
 
+// Local avatar paths
+const LOCAL_AVATARS = {
+  user: '/images/avatars/default-avatar.svg',
+  charlie: '/images/avatars/charlie.svg',
+  alex: '/images/avatars/alex.svg',
+  jordan: '/images/avatars/jordan.svg',
+  taylor: '/images/avatars/taylor.svg',
+  riley: '/images/avatars/riley.svg'
+};
+
 interface Message {
   user: string;
   message: string;
@@ -43,7 +53,7 @@ const PrivateChat: React.FC<PrivateChatProps> = ({ friends, currentUser }) => {
     const message = {
       user: currentUser.name,
       message: newMessage.trim(),
-      avatar: currentUser.avatar || 'https://i.imgur.com/MZ3Wy6Y.gif', // Fallback to a default avatar
+      avatar: currentUser.avatar || LOCAL_AVATARS.user,
       timestamp: new Date().toISOString(),
       glitter: Math.random() > 0.8 ? '✨' : '' // Use empty string instead of undefined
     };
@@ -95,7 +105,7 @@ const PrivateChat: React.FC<PrivateChatProps> = ({ friends, currentUser }) => {
             >
               <div className="relative">
                 <img
-                  src={friend.avatar}
+                  src={friend.avatar || LOCAL_AVATARS[friend.name.toLowerCase() as keyof typeof LOCAL_AVATARS] || LOCAL_AVATARS.user}
                   alt={friend.name}
                   className="w-12 h-12 rounded-full object-cover"
                 />
@@ -122,7 +132,7 @@ const PrivateChat: React.FC<PrivateChatProps> = ({ friends, currentUser }) => {
                   }`}
                 >
                   <img
-                    src={msg.avatar}
+                    src={msg.avatar || LOCAL_AVATARS.user}
                     alt={msg.user}
                     className="w-8 h-8 rounded-full object-cover"
                   />

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Glossy background with gradient (Y2K style) -->
+  <defs>
+    <linearGradient id="glossyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4A84E7" />
+      <stop offset="50%" stop-color="#72BEFD" />
+      <stop offset="100%" stop-color="#377BF3" />
+    </linearGradient>
+    <radialGradient id="highlightGradient" cx="30%" cy="30%" r="50%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="white" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background circle with glossy gradient -->
+  <circle cx="64" cy="64" r="60" fill="url(#glossyGradient)" />
+  
+  <!-- Highlight overlay for glossy effect -->
+  <circle cx="64" cy="64" r="58" fill="url(#highlightGradient)" />
+  
+  <!-- User silhouette -->
+  <path d="M64,36 C53,36 44,45 44,56 C44,67 53,76 64,76 C75,76 84,67 84,56 C84,45 75,36 64,36 Z" fill="white" opacity="0.9" />
+  <path d="M64,84 C44,84 28,92 28,102 L28,110 L100,110 L100,102 C100,92 84,84 64,84 Z" fill="white" opacity="0.9" />
+  
+  <!-- Subtle border -->
+  <circle cx="64" cy="64" r="60" fill="none" stroke="#E63B3F" stroke-width="2" opacity="0.5" />
+</svg>
