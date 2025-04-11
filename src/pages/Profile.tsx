@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSpring, animated } from '@react-spring/web';
-import { Music2, UserCog, ArrowLeft, Heart, Disc, Star, MessageCircle, Settings, Edit3 } from 'lucide-react';
+import { Music2, UserCog, ArrowLeft, Heart, Disc, Star, MessageCircle, Settings, Edit3, UserPlus, UserMinus, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Dummy profile data
@@ -23,6 +23,91 @@ const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState({ ...profileData });
+  const [friends, setFriends] = useState([]);
+  const [friendRequests, setFriendRequests] = useState([]);
+  const [showFriendSearch, setShowFriendSearch] = useState(false);
+  const [searchUsername, setSearchUsername] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    // Fetch friends list
+    fetch('http://localhost:5000/api/friends')
+      .then(response => response.json())
+      .then(data => setFriends(data.friends))
+      .catch(error => console.error('Error fetching friends:', error));
+
+    // Fetch friend requests
+    fetch('http://localhost:5000/api/friend-request')
+      .then(response => response.json())
+      .then(data => setFriendRequests(data.requests))
+      .catch(error => console.error('Error fetching friend requests:', error));
+  }, []);
+
+  const handleFriendRequest = async (userId: number) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/friend-request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ receiver_id: userId }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert('Friend request sent successfully!');
+      } else {
+        alert(data.error || 'Failed to send friend request');
+      }
+    } catch (error) {
+      console.error('Error sending friend request:', error);
+      alert('Failed to send friend request');
+    }
+  };
+
+  const handleFriendRequestResponse = async (requestId: number, action: 'accept' | 'reject') => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/friend-request/${requestId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setFriendRequests(requests => requests.filter(req => req.id !== requestId));
+        if (action === 'accept') {
+          // Refresh friends list
+          const friendsResponse = await fetch('http://localhost:5000/api/friends');
+          const friendsData = await friendsResponse.json();
+          setFriends(friendsData.friends);
+        }
+        alert(`Friend request ${action}ed!`);
+      } else {
+        alert(data.error || `Failed to ${action} friend request`);
+      }
+    } catch (error) {
+      console.error(`Error ${action}ing friend request:`, error);
+      alert(`Failed to ${action} friend request`);
+    }
+  };
+
+  const handleSearchFriends = async () => {
+    if (!searchUsername.trim()) return;
+    
+    setIsSearching(true);
+    try {
+      const response = await fetch(`http://localhost:5000/api/users/search?username=${searchUsername}`);
+      const data = await response.json();
+      setSearchResults(data.users || []);
+    } catch (error) {
+      console.error('Error searching users:', error);
+      alert('Failed to search users');
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   // Page fade-in animation
   const fadeIn = useSpring({
@@ -150,7 +235,7 @@ const ProfilePage = () => {
             {/* Profile Content */}
             <div className="w-full md:w-2/3">
               {/* Profile Tabs */}
-              <div className="flex border-b-2 border-[#C0C0C0]/30 mb-6">
+              <div className="flex border-b-2 border-[#C0C0C0]/30 mb-6 overflow-x-auto pb-2">
                 <button 
                   className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
                   onClick={() => setActiveTab('profile')}
@@ -164,6 +249,13 @@ const ProfilePage = () => {
                 >
                   <Disc className="w-5 h-5 mr-2" />
                   Music Taste
+                </button>
+                <button 
+                  className={`tab-button ${activeTab === 'friends' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('friends')}
+                >
+                  <Users className="w-5 h-5 mr-2" />
+                  Friends
                 </button>
                 <button 
                   className={`tab-button ${activeTab === 'messages' ? 'active' : ''}`}
@@ -308,6 +400,140 @@ const ProfilePage = () => {
                 </div>
               )}
               
+              {/* Friends Tab */}
+              {activeTab === 'friends' && (
+                <div className="holographic-card p-6">
+                  <div className="relative z-10">
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xl text-white pixel-font glow-text flex items-center">
+                        <Users className="mr-2" />
+                        Your Friends
+                      </h3>
+                      <button 
+                        onClick={() => setShowFriendSearch(!showFriendSearch)}
+                        className="chrome-button-small"
+                      >
+                        {showFriendSearch ? <Edit3 className="w-5 h-5" /> : <UserPlus className="w-5 h-5" />}
+                      </button>
+                    </div>
+
+                    {/* Friend Search */}
+                    {showFriendSearch && (
+                      <div className="mb-6 p-4 retro-card-small">
+                        <h4 className="text-[#39FF14] pixel-font mb-4">Find New Friends</h4>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={searchUsername}
+                            onChange={(e) => setSearchUsername(e.target.value)}
+                            placeholder="Enter username"
+                            className="flex-1 bg-[#1A1A2E] border-2 border-[#39FF14] text-white px-3 py-2 rounded-lg"
+                          />
+                          <button
+                            onClick={handleSearchFriends}
+                            disabled={isSearching}
+                            className="chrome-button-small"
+                          >
+                            {isSearching ? '...' : 'Search'}
+                          </button>
+                        </div>
+                        
+                        {/* Search Results */}
+                        {searchResults.length > 0 && (
+                          <div className="mt-4 space-y-2">
+                            {searchResults.map((user: any) => (
+                              <div key={user.id} className="flex items-center justify-between p-2 border-2 border-[#39FF14]/30 rounded-lg">
+                                <div className="flex items-center space-x-2">
+                                  <img
+                                    src={user.profile_image || 'https://i.imgur.com/MZ3Wy6Y.gif'}
+                                    alt={user.username}
+                                    className="w-8 h-8 rounded-full border border-[#39FF14]"
+                                  />
+                                  <span className="text-white pixel-body-font">{user.username}</span>
+                                </div>
+                                <button
+                                  onClick={() => handleFriendRequest(user.id)}
+                                  className="chrome-button-small"
+                                >
+                                  <UserPlus className="w-4 h-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Friend Requests */}
+                    {friendRequests.length > 0 && (
+                      <div className="mb-6">
+                        <h4 className="text-[#FF80B2] pixel-font mb-4">Friend Requests</h4>
+                        <div className="space-y-2">
+                          {friendRequests.map((request: any) => (
+                            <div key={request.id} className="retro-card-small p-3 flex items-center justify-between">
+                              <div className="flex items-center space-x-2">
+                                <img
+                                  src={request.sender.profile_image || 'https://i.imgur.com/MZ3Wy6Y.gif'}
+                                  alt={request.sender.username}
+                                  className="w-8 h-8 rounded-full border border-[#FF80B2]"
+                                />
+                                <span className="text-white pixel-body-font">{request.sender.username}</span>
+                              </div>
+                              <div className="flex space-x-2">
+                                <button
+                                  onClick={() => handleFriendRequestResponse(request.id, 'accept')}
+                                  className="chrome-button-small text-[#39FF14]"
+                                >
+                                  ✓
+                                </button>
+                                <button
+                                  onClick={() => handleFriendRequestResponse(request.id, 'reject')}
+                                  className="chrome-button-small text-[#FF80B2]"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Friends List */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      {friends.map((friend: any) => (
+                        <div key={friend.id} className="retro-card-small p-4 flex items-center justify-between group hover:border-[#39FF14]">
+                          <div className="flex items-center space-x-3">
+                            <img
+                              src={friend.profile_image || 'https://i.imgur.com/MZ3Wy6Y.gif'}
+                              alt={friend.username}
+                              className="w-10 h-10 rounded-full border-2 border-[#39FF14] group-hover:scale-110 transition-transform"
+                            />
+                            <div>
+                              <h4 className="text-[#39FF14] pixel-font group-hover:glow-text">{friend.username}</h4>
+                              <p className="text-[#C0C0C0] text-sm pixel-body-font">Online</p>
+                            </div>
+                          </div>
+                          <div className="flex space-x-2">
+                            <button className="chrome-button-small group-hover:scale-110 transition-transform">
+                              <MessageCircle className="w-5 h-5" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {friends.length === 0 && !showFriendSearch && (
+                      <div className="text-center text-[#C0C0C0] pixel-body-font p-8">
+                        <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                        <p>No friends yet! Start connecting with other music lovers.</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="holographic-overlay absolute inset-0"></div>
+                </div>
+              )}
+
               {/* Messages Tab */}
               {activeTab === 'messages' && (
                 <div className="holographic-card p-6">
