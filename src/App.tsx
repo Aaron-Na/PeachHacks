@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useSpring, animated, useTrail } from '@react-spring/web';
-import { Music2, Users, UserCog, Sparkles, LogIn, Star, Heart, Disc, Play, Square, PlusSquare } from 'lucide-react';
+import { useSpring, animated } from '@react-spring/web';
+import { Music2, Users, UserCog, Sparkles, LogIn, Star, Heart, Disc, Square, PlusSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Component for animated Y2K cursor trail
@@ -157,164 +157,134 @@ const FeatureCard = ({ icon: Icon, title, description, buttonText, color }:
   );
 };
 
-function App() {
-  const [showLoginMenu, setShowLoginMenu] = useState(false);
-  const loginRef = useRef<HTMLDivElement>(null);
+const App = () => {
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
 
-  // Close login menu when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (loginRef.current && !loginRef.current.contains(event.target as Node)) {
-        setShowLoginMenu(false);
-      }
-    };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [loginRef]);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
-  // Animated title with trail effect
-  const titleWords = ['Find', 'Your', 'Music', 'Soul', 'Mates'];
-  const titleTrail = useTrail(titleWords.length, {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (navRef.current && !navRef.current.contains(event.target as Node)) {
+      setIsNavOpen(false);
+    }
+  };
+
+  const fadeIn = useSpring({
     from: { opacity: 0, transform: 'translateY(20px)' },
     to: { opacity: 1, transform: 'translateY(0)' },
-    config: { tension: 300, friction: 20 },
+    config: { tension: 280, friction: 60 },
   });
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-deep-space">
-      {/* Cursor trail effect */}
+    <div className="min-h-screen bg-[#1A1A2E] overflow-x-hidden">
+      {/* Y2K Effects */}
       <CursorTrail />
-      
-      {/* Background Elements */}
-      <div className="grid-overlay absolute inset-0" />
-      <div className="scanline absolute inset-0" />
-      <div className="bg-gradient absolute inset-0 opacity-70" />
-      
-      {/* Floating Shapes */}
       <FloatingShapes />
+      <RandomSparkles />
       
-      {/* Random Sparkles */}
-      <RandomSparkles count={20} />
-      
-      {/* Header */}
-      <header className="relative z-10 px-6 py-4">
-        <nav className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="relative">
-              <Music2 className="w-8 h-8 text-white relative z-10" />
-              <div className="absolute inset-0 bg-[#ff77aa]/30 blur-lg transform scale-150" />
-            </div>
-            <span className="text-white text-2xl font-bold pixel-font glow-text">MusicMate</span>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <div className="hidden md:flex items-center space-x-3">
-              <NavMenuItem icon={Users} label="Friends" />
-              <NavMenuItem icon={Disc} label="Discover" />
-              <Link to="/discover" className="no-underline">
-                <NavMenuItem icon={Disc} label="Discover" />
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 w-full z-50 bg-[#1A1A2E]/80 backdrop-blur-lg border-b-2 border-[#C0C0C0]/30">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-2">
+              <div className="relative">
+                <Music2 className="w-6 h-6 text-white relative z-10" />
+                <div className="absolute inset-0 bg-[#ff77aa]/30 blur-lg transform scale-150" />
+              </div>
+              <span className="text-white text-xl font-bold pixel-font">MusicMate</span>
+            </Link>
+            
+            {/* Navigation Links */}
+            <div className="hidden md:flex items-center space-x-8">
+              <Link to="/discover">
+                <NavMenuItem icon={Users} label="Find Friends" />
               </Link>
+              <Link to="/profile">
+                <NavMenuItem icon={UserCog} label="Profile" />
+              </Link>
+              <NavMenuItem icon={Disc} label="Music" />
+              <NavMenuItem icon={LogIn} label="Login" />
             </div>
             
-            <div className="relative" ref={loginRef}>
-              <button 
-                className="chrome-button flex items-center space-x-2"
-                onClick={() => setShowLoginMenu(!showLoginMenu)}
-              >
-                <LogIn className="w-5 h-5" />
-                <span>Connect Spotify</span>
-              </button>
-              
-              {showLoginMenu && (
-                <div className="absolute right-0 mt-2 w-64 py-2 bg-[#1A1A2E]/90 backdrop-blur-lg border-2 border-[#C0C0C0] rounded-lg shadow-xl z-[100]">
-                  <div className="px-4 py-2 border-b border-[#C0C0C0]/50">
-                    <p className="text-[#3adfd4] text-sm pixel-body-font">Connect with Spotify to:</p>
-                  </div>
-                  <div className="px-4 py-3 hover:bg-[#ff77aa]/20 transition-colors cursor-pointer">
-                    <p className="text-white pixel-body-font">• Find music matches</p>
-                  </div>
-                  <div className="px-4 py-3 hover:bg-[#ff77aa]/20 transition-colors cursor-pointer">
-                    <p className="text-white pixel-body-font">• Share your playlists</p>
-                  </div>
-                  <div className="px-4 py-3 hover:bg-[#ff77aa]/20 transition-colors cursor-pointer">
-                    <p className="text-white pixel-body-font">• Discover new music</p>
-                  </div>
-                  <div className="px-4 pt-3 pb-2 border-t border-[#C0C0C0]/50 flex justify-center">
-                    <button 
-                      className="button23 space-x-2" 
-                      onClick={() => setShowLoginMenu(false)}
-                    >
-                      <LogIn className="w-5 h-5" />
-                      <span>Connect Spotify</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden text-white"
+              onClick={() => setIsNavOpen(!isNavOpen)}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
-        </nav>
-      </header>
-
+        </div>
+      </nav>
+      
+      {/* Mobile Navigation Menu */}
+      <div 
+        ref={navRef}
+        className={`fixed top-16 right-0 w-64 h-screen bg-[#1A1A2E]/95 backdrop-blur-lg transform transition-transform duration-200 ease-in-out z-40 border-l-2 border-[#C0C0C0]/30 ${
+          isNavOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="flex flex-col items-center py-8 space-y-6">
+          <Link to="/discover" className="w-full">
+            <NavMenuItem icon={Users} label="Find Friends" />
+          </Link>
+          <Link to="/profile" className="w-full">
+            <NavMenuItem icon={UserCog} label="Profile" />
+          </Link>
+          <NavMenuItem icon={Disc} label="Music" />
+          <NavMenuItem icon={LogIn} label="Login" />
+        </div>
+      </div>
+      
       {/* Main Content */}
-      <animated.main className="relative z-10 px-6 py-12 md:py-20">
-        <div className="max-w-7xl mx-auto">
+      <animated.main style={fadeIn} className="relative pt-24 pb-12">
+        <div className="max-w-7xl mx-auto px-6">
           {/* Hero Section */}
-          <div className="text-center mb-16">
-            <div className="flex justify-center items-baseline space-x-2 flex-wrap mb-6">
-              {titleTrail.map((style, index) => (
-                <animated.span 
-                  key={index} 
-                  style={style} 
-                  className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#ff77aa] to-[#3adfd4] pixel-font glow-text inline-block"
-                >
-                  {titleWords[index]}
-                </animated.span>
-              ))}
-            </div>
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 pixel-font glow-text">
+              Find Your Music Soulmate
+            </h1>
+            <p className="text-[#C0C0C0] text-lg md:text-xl mb-8 pixel-body-font">
+              Connect with people who share your Y2K music vibes
+            </p>
             
-            <div className="relative overflow-hidden h-12 mb-8 border-t-2 border-b-2 border-[#ff77aa]/50">
-              <div className="marquee">
-                <p className="text-[#ff77aa] text-xl pixel-body-font">
-                  ★ Join thousands of music lovers ★ Make new friends ★ Discover amazing music ★ Create your Y2K profile ★
-                </p>
-              </div>
-            </div>
-            
-            <div className="y2k-cd-player relative max-w-xs mx-auto mb-12">
-              <div className="cd-base relative w-64 h-64 rounded-full border-8 border-[#C0C0C0] bg-gradient-to-r from-[#1A1A2E] to-[#00B4B4] p-2 mx-auto">
-                <div className="cd-disc absolute inset-2 rounded-full bg-gradient-to-r from-[#1A1A2E] to-[#000] overflow-hidden flex items-center justify-center animate-spin-slow">
-                  <div className="cd-hole w-8 h-8 rounded-full bg-[#000] border-2 border-[#C0C0C0]"></div>
-                  <div className="cd-reflection absolute inset-0 bg-gradient-to-tr from-transparent via-[#C0C0C0]/10 to-[#C0C0C0]/30"></div>
-                </div>
-                <div className="play-button absolute -bottom-4 right-0 transform translate-x-1/4 bg-[#ff77aa] rounded-full p-3 border-2 border-[#C0C0C0] glow-effect">
-                  <Play className="w-5 h-5 text-white" />
-                </div>
-              </div>
-              <div className="cd-shadow w-64 h-8 bg-black/30 blur-md rounded-full mx-auto -mt-4"></div>
-            </div>
-            
-            <button className="chrome-orb-button text-lg px-8 py-3 mb-8 animate-pulse-slow">
+            <button 
+              className="bg-gradient-to-r from-[#ff77aa] to-[#7f5fc5] text-white px-8 py-3 rounded-full font-semibold hover:from-[#ff5599] hover:to-[#6f4fb5] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#ff77aa] focus:ring-opacity-50 shadow-lg"
+              onClick={() => window.location.href = '/discover'}
+            >
               Start Matching
             </button>
           </div>
           
           {/* Feature Cards */}
           <div className="grid md:grid-cols-3 gap-8 mt-16">
-            <FeatureCard 
-              icon={Users} 
-              title="Match Making" 
-              description="Find friends based on your music taste and shared vibes" 
-              buttonText="Find Matches"
-              color="from-[#ff77aa] to-[#7f5fc5]"
-            />
+            <Link to="/discover">
+              <FeatureCard 
+                icon={Users} 
+                title="Match Making" 
+                description="Find friends based on your music taste and shared vibes" 
+                buttonText="Find Matches"
+                color="from-[#ff77aa] to-[#7f5fc5]"
+              />
+            </Link>
             
-            <FeatureCard 
-              icon={UserCog} 
-              title="Profile Management" 
-              description="Customize your Y2K inspired digital ID card"
-              buttonText="Edit Profile"
-              color="from-[#00B4B4] to-[#3adfd4]"
-            />
+            <Link to="/profile">
+              <FeatureCard 
+                icon={UserCog} 
+                title="Profile Management" 
+                description="Customize your Y2K inspired digital ID card"
+                buttonText="Edit Profile"
+                color="from-[#00B4B4] to-[#3adfd4]"
+              />
+            </Link>
             
             <FeatureCard 
               icon={Sparkles} 
