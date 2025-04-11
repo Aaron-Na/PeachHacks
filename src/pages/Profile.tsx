@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSpring, animated } from '@react-spring/web';
 import { Music2, UserCog, ArrowLeft, Heart, Disc, Star, MessageCircle, Settings, Edit3 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import PrivateChat from '../components/PrivateChat';
 
 // Dummy profile data
 const profileData = {
@@ -14,7 +15,7 @@ const profileData = {
   bio: "Music collector and Y2K enthusiast. Loving the digital aesthetic and collecting virtual friends!",
   stats: {
     friends: 42,
-    playlists: 13,
+    playlists: 13,        
     matches: 28
   }
 };
@@ -310,22 +311,33 @@ const ProfilePage = () => {
               
               {/* Messages Tab */}
               {activeTab === 'messages' && (
-                <div className="holographic-card p-6">
-                  <div className="relative z-10">
-                    <h3 className="text-xl text-white mb-4 pixel-font glow-text">Your Messages</h3>
-                    
-                    <div className="chat-window border-2 border-[#C0C0C0] bg-[#1A1A2E]/80 h-96 overflow-y-auto rounded-lg p-4 mb-4">
-                      <div className="text-center text-[#C0C0C0] pixel-body-font">
-                        <p>Connect with Spotify to start messaging with your music matches!</p>
-                      </div>
-                    </div>
-                    
-                    <button className="chrome-orb-button w-full">
-                      Connect Spotify
-                    </button>
-                  </div>
-                  <div className="holographic-overlay absolute inset-0"></div>
-                </div>
+                <PrivateChat
+                  currentUser={{
+                    id: 1,
+                    name: profileData.username,
+                    avatar: profileData.profilePic
+                  }}
+                  friends={[
+                    {
+                      id: 2,
+                      name: 'Alice',
+                      avatar: './static/profile_images/asian-woman-posing-looking-camera_23-2148255359.webp',
+                      online: true
+                    },
+                    {
+                      id: 3,
+                      name: 'Bob',
+                      avatar: './static/profile_images/man-6477129_640.webp',
+                      online: false
+                    },
+                    {
+                      id: 4,
+                      name: 'Charlie',
+                      avatar: './static/profile_images/portrait-bangladeshi-man_53876-39178.webp',
+                      online: true
+                    }
+                  ]}
+                />
               )}
             </div>
           </div>
