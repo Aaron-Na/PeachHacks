@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSpring, animated, useTrail } from '@react-spring/web';
-import { Users, Music2, MessageCircle, Star, Disc } from 'lucide-react';
+import { Users, Music2, MessageCircle, Star, Disc, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Dummy friends data (in a real app, this would come from an API)
@@ -57,6 +57,22 @@ const Friends = () => {
     to: { opacity: 1, transform: 'translateY(0)' },
     config: { tension: 280, friction: 20 }
   });
+
+  // State for blend popup
+  const [activeBlendId, setActiveBlendId] = useState<number | null>(null);
+  const [blendPercentage, setBlendPercentage] = useState<number>(50);
+
+  // Open blend popup for a specific friend
+  const handleOpenBlend = (friendId: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    setActiveBlendId(friendId);
+    setBlendPercentage(50); // Reset to default
+  };
+
+  // Close blend popup
+  const handleCloseBlend = () => {
+    setActiveBlendId(null);
+  };
 
   // Title animation
   const titleWords = ['Your', 'Music', 'Matches'];
@@ -165,6 +181,13 @@ const Friends = () => {
                     {friend.lastActive}
                   </span>
                   <div className="flex gap-2">
+                    <button 
+                      onClick={(e) => handleOpenBlend(friend.id, e)}
+                      className="px-4 py-2 rounded-full bg-gradient-to-r from-[#ff77aa] to-[#3adfd4] text-white font-bold hover:opacity-90 transition-opacity flex items-center gap-2 pixel-body-font"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M10 9.5a.5.5 0 0 0-1 0v5a.5.5 0 0 0 1 0z"/><path d="M15 9.5a.5.5 0 0 0-1 0v5a.5.5 0 0 0 1 0z"/><path d="M12 9.5a.5.5 0 0 0-1 0v5a.5.5 0 0 0 1 0z"/></svg>
+                      Blend Tastes
+                    </button>
                     <button className="px-4 py-2 rounded-full bg-gradient-to-r from-[#ff77aa] to-[#3adfd4] text-white font-bold hover:opacity-90 transition-opacity flex items-center gap-2 pixel-body-font">
                       <MessageCircle size={16} />
                       Message
@@ -177,6 +200,66 @@ const Friends = () => {
                     </Link>
                   </div>
                 </div>
+
+                {/* Blend Tastes Popup */}
+                {activeBlendId === friend.id && (
+                  <div className="absolute top-0 left-0 w-full h-full bg-[#1A1A2E]/95 backdrop-blur-sm rounded-xl p-6 border-2 border-[#3adfd4] z-20 flex flex-col justify-center items-center">
+                    <button 
+                      onClick={handleCloseBlend}
+                      className="absolute top-3 right-3 text-[#ff77aa] hover:text-[#ff77aa]/80 transition-colors"
+                    >
+                      <X size={24} />
+                    </button>
+                    
+                    <h3 className="text-2xl font-bold pixel-font text-[#3adfd4] glow-text mb-6">Blend with {friend.displayName}</h3>
+                    
+                    <div className="w-full max-w-md bg-black/50 rounded-xl p-6 border border-[#ff77aa]/50">
+                      <div className="flex justify-between mb-2">
+                        <span className="text-[#ff77aa] pixel-body-font">Unique Songs</span>
+                        <span className="text-[#3adfd4] pixel-body-font">Common Favorites</span>
+                      </div>
+                      
+                      <div className="relative mb-6">
+                        <input 
+                          type="range" 
+                          min="0" 
+                          max="100" 
+                          value={blendPercentage} 
+                          onChange={(e) => setBlendPercentage(parseInt(e.target.value))}
+                          className="w-full h-3 rounded-full appearance-none bg-gradient-to-r from-[#ff77aa] to-[#3adfd4] outline-none cursor-pointer"
+                          style={{
+                            WebkitAppearance: 'none',
+                            appearance: 'none',
+                          }}
+                        />
+                        <div className="absolute w-full flex justify-between mt-2 px-2">
+                          <span className="text-white/70 text-sm pixel-body-font">0%</span>
+                          <span className="text-white/70 text-sm pixel-body-font">50%</span>
+                          <span className="text-white/70 text-sm pixel-body-font">100%</span>
+                        </div>
+                      </div>
+                      
+                      <div className="text-center">
+                        <div className="text-4xl font-bold pixel-font text-transparent bg-clip-text bg-gradient-to-r from-[#ff77aa] to-[#3adfd4] glow-text mb-2">
+                          {blendPercentage}%
+                        </div>
+                        <p className="text-white/80 text-sm pixel-body-font mb-6">
+                          {blendPercentage < 20 
+                            ? "Mostly unique songs from both of your libraries" 
+                            : blendPercentage < 50
+                            ? "A mix with more unique songs than common favorites"
+                            : blendPercentage < 80
+                            ? "A balanced mix of common favorites and unique tracks"
+                            : "Mostly songs you both know and love"}
+                        </p>
+                        
+                        <button className="w-full px-6 py-3 rounded-full bg-gradient-to-r from-[#ff77aa] to-[#3adfd4] text-white font-bold hover:opacity-90 transition-opacity pixel-body-font">
+                          Create Blended Playlist
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </animated.div>
           ))}
