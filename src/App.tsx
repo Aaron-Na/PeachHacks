@@ -99,7 +99,7 @@ const RandomSparkles = ({ count = 15 }) => {
 };
 
 // NavMenuItem component with hover animation
-const NavMenuItem = ({ icon: Icon, label }: { icon: React.ElementType, label: string }) => {
+const NavMenuItem = ({ icon: Icon, label, to }: { icon: React.ElementType, label: string, to?: string }) => {
   const [hovered, setHovered] = useState(false);
   
   const animationProps = useSpring({
@@ -108,7 +108,7 @@ const NavMenuItem = ({ icon: Icon, label }: { icon: React.ElementType, label: st
     config: { tension: 300, friction: 10 },
   });
   
-  return (
+  const content = (
     <animated.div
       className="flex flex-col items-center p-2 cursor-pointer"
       style={animationProps}
@@ -119,6 +119,12 @@ const NavMenuItem = ({ icon: Icon, label }: { icon: React.ElementType, label: st
       <span className="text-xs mt-1 font-bold">{label}</span>
     </animated.div>
   );
+
+  return to ? (
+    <Link to={to} className="text-white hover:text-white">
+      {content}
+    </Link>
+  ) : content;
 };
 
 // Feature card with PSP/PS2 style
@@ -209,7 +215,7 @@ function App() {
           
           <div className="flex items-center space-x-4">
             <div className="hidden md:flex items-center space-x-3">
-              <NavMenuItem icon={Users} label="Friends" />
+              <NavMenuItem icon={Users} label="Friends" to="/friends" />
               <NavMenuItem icon={Disc} label="Discover" />
               <Link to="/profile" className="no-underline">
                 <NavMenuItem icon={UserCog} label="Profile" />

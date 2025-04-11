@@ -6,6 +6,7 @@ import Profile from './pages/Profile.tsx'
 import MatchMaker from './pages/MatchMaker.tsx'
 import Registration from './pages/Registration.tsx'
 import './index.css'
+import './styles/y2k.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
