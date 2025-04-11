@@ -211,8 +211,8 @@ function App() {
             <div className="hidden md:flex items-center space-x-3">
               <NavMenuItem icon={Users} label="Friends" />
               <NavMenuItem icon={Disc} label="Discover" />
-              <Link to="/profile" className="no-underline">
-                <NavMenuItem icon={UserCog} label="Profile" />
+              <Link to="/discover" className="no-underline">
+                <NavMenuItem icon={Disc} label="Discover" />
               </Link>
             </div>
             
