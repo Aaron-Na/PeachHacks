@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSpring, animated, useTrail } from '@react-spring/web';
-import { Music2, Users, UserCog, Sparkles, LogIn, Star, Heart, Disc, Play, Square, PlusSquare } from 'lucide-react';
+import { Music2, Users, UserCog, Sparkles, LogIn, Star, Heart, Disc, Play, Square, PlusSquare, UserPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Component for animated Y2K cursor trail
@@ -215,6 +215,11 @@ function App() {
                 <NavMenuItem icon={UserCog} label="Profile" />
               </Link>
             </div>
+            
+            <Link to="/register" className="chrome-button flex items-center space-x-2 mr-2">
+              <UserPlus className="w-5 h-5" />
+              <span>Register</span>
+            </Link>
             
             <div className="relative" ref={loginRef}>
               <button 
