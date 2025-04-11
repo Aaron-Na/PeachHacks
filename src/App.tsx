@@ -122,37 +122,37 @@ const NavMenuItem = ({ icon: Icon, label }: { icon: React.ElementType, label: st
 };
 
 // Feature card with PSP/PS2 style
-const FeatureCard = ({ icon: Icon, title, description, buttonText, color }: 
-  { icon: React.ElementType, title: string, description: string, buttonText: string, color: string }) => {
-  
+const FeatureCard = ({ icon: Icon, title, description, buttonText, color, link }: { 
+  icon: React.ElementType, 
+  title: string, 
+  description: string, 
+  buttonText: string, 
+  color: string,
+  link: string 
+}) => {
   const [hovered, setHovered] = useState(false);
   
   const springProps = useSpring({
-    transform: hovered ? 'scale(1.05) translateY(-5px)' : 'scale(1) translateY(0px)',
-    boxShadow: hovered 
-      ? '0 15px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 119, 170, 0.5)' 
-      : '0 5px 15px rgba(0, 0, 0, 0.2), 0 0 5px rgba(255, 119, 170, 0.3)',
-    config: { tension: 300, friction: 20 },
+    transform: hovered ? 'scale(1.05)' : 'scale(1)',
+    config: { tension: 300, friction: 10 },
   });
   
   return (
-    <animated.div 
+    <animated.div
       style={springProps}
-      className="holographic-card relative overflow-hidden rounded-lg p-6"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      className="relative p-6 border-2 border-[#C0C0C0] rounded-lg bg-[#1A1A2E]/60 backdrop-blur-sm"
     >
+      <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-10 rounded-lg`} />
       <div className="relative z-10">
-        <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gradient-to-br ${color}`}>
-          <Icon className="w-8 h-8 text-white" />
-        </div>
-        <h3 className="text-xl font-bold text-white mb-2 text-center pixel-font">{title}</h3>
-        <p className="text-white/80 mb-6 text-center pixel-body-font">{description}</p>
-        <button className="chrome-orb-button w-full">
+        <Icon className="w-12 h-12 text-white mb-4" />
+        <h3 className="text-xl font-bold text-white mb-2 pixel-font glow-text">{title}</h3>
+        <p className="text-[#C0C0C0] mb-6 pixel-body-font">{description}</p>
+        <Link to={link} className="chrome-button">
           {buttonText}
-        </button>
+        </Link>
       </div>
-      <div className="holographic-overlay absolute inset-0"></div>
     </animated.div>
   );
 };
@@ -293,9 +293,9 @@ function App() {
               <div className="cd-shadow w-64 h-8 bg-black/30 blur-md rounded-full mx-auto -mt-4"></div>
             </div>
             
-            <button className="chrome-orb-button text-lg px-8 py-3 mb-8 animate-pulse-slow">
+            <Link to="/discover" className="chrome-orb-button text-lg px-8 py-3 mb-8 animate-pulse-slow">
               Start Matching
-            </button>
+            </Link>
           </div>
           
           {/* Feature Cards */}
@@ -306,6 +306,7 @@ function App() {
               description="Find friends based on your music taste and shared vibes" 
               buttonText="Find Matches"
               color="from-[#ff77aa] to-[#7f5fc5]"
+              link="/discover"
             />
             
             <FeatureCard 
@@ -314,14 +315,16 @@ function App() {
               description="Customize your Y2K inspired digital ID card"
               buttonText="Edit Profile"
               color="from-[#00B4B4] to-[#3adfd4]"
+              link="/profile"
             />
             
             <FeatureCard 
               icon={Sparkles} 
               title="Music Discovery" 
               description="Find your next favorite song through your new connections"
-              buttonText="Explore Music"
+              buttonText="Coming Soon"
               color="from-[#ff77aa] to-[#00B4B4]"
+              link="#"
             />
           </div>
           
