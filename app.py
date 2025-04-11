@@ -1,5 +1,5 @@
 # app.py - Main application file
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -35,6 +35,14 @@ with app.app_context():
     db.create_all()
 
 # Routes
+@app.route('/')
+def serve_index():
+    return send_from_directory('.', 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('.', path)
+
 @app.route('/api/users', methods=['POST'])
 def create_user():
     data = request.json
@@ -88,7 +96,6 @@ def update_user(user_id):
         if existing_user:
             return jsonify({"error": "Username already exists"}), 409
         user.username = data['username']
-    s
     if 'password' in data:
         user.password_hash = generate_password_hash(data['password'])
     

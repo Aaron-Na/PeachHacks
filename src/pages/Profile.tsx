@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSpring, animated } from '@react-spring/web';
 import { Music2, UserCog, ArrowLeft, Heart, Disc, Star, MessageCircle, Settings, Edit3 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -321,19 +321,19 @@ const ProfilePage = () => {
                     {
                       id: 2,
                       name: 'Alice',
-                      avatar: './static/profile_images/asian-woman-posing-looking-camera_23-2148255359.webp',
+                      avatar: 'https://i.imgur.com/ZWfPm4o.png',
                       online: true
                     },
                     {
                       id: 3,
                       name: 'Bob',
-                      avatar: './static/profile_images/man-6477129_640.webp',
+                      avatar: 'https://i.imgur.com/7tN7Txi.png',
                       online: false
                     },
                     {
                       id: 4,
                       name: 'Charlie',
-                      avatar: './static/profile_images/portrait-bangladeshi-man_53876-39178.webp',
+                      avatar: 'https://i.imgur.com/PHk8vHh.png',
                       online: true
                     }
                   ]}

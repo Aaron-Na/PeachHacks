@@ -43,12 +43,14 @@ const PrivateChat: React.FC<PrivateChatProps> = ({ friends, currentUser }) => {
     const message = {
       user: currentUser.name,
       message: newMessage.trim(),
-      avatar: currentUser.avatar,
+      avatar: currentUser.avatar || 'https://i.imgur.com/MZ3Wy6Y.gif', // Fallback to a default avatar
       timestamp: new Date().toISOString(),
-      glitter: Math.random() > 0.8 ? '✨' : undefined // Random glitter effect
+      glitter: Math.random() > 0.8 ? '✨' : '' // Use empty string instead of undefined
     };
 
     try {
+      console.log('Sending message:', message);
+      
       const response = await fetch('http://localhost:5000/messages', {
         method: 'POST',
         headers: {
@@ -58,11 +60,19 @@ const PrivateChat: React.FC<PrivateChatProps> = ({ friends, currentUser }) => {
       });
 
       if (response.ok) {
-        setMessages([...messages, message]);
+        // Get the saved message from the server response
+        const savedMessage = await response.json();
+        // Add the message to local state after confirming server received it
+        setMessages([...messages, savedMessage]);
         setNewMessage('');
+      } else {
+        const errorData = await response.text();
+        console.error(`Failed to send message: Status ${response.status}, Response: ${errorData}`);
+        alert(`Failed to send message: ${response.status} ${response.statusText}`);
       }
     } catch (error) {
       console.error('Failed to send message:', error);
+      alert(`Network error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
