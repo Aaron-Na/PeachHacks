@@ -6,13 +6,10 @@ import { Link } from 'react-router-dom';
 // Dummy friends data (in a real app, this would come from an API)
 const friendsData = [
   {
-    // username: "RetroWave_Queen",
-    // displayName: "Sarah Mitchell",
-    // profilePic: "https://i.pravatar.cc/150?img=1",
     id: 1,
     username: "A-aronNash",
     displayName: "Aaron",
-    profilePic: "https://i.pravatar.cc/400?img=13",
+    profilePic: "",
     matchPercentage: 92,
     commonArtists: ["Daft Punk", "The Prodigy", "Kylie Minogue"],
     commonGenres: ["Eurodance", "Y2K Pop"],
@@ -22,7 +19,7 @@ const friendsData = [
     id: 2,
     username: "ArticMonkeys",
     displayName: "Alex Turner",
-    profilePic: "https://i.pravatar.cc/400?img=11",
+    profilePic: "",
     matchPercentage: 88,
     commonArtists: ["Britney Spears", "Backstreet Boys"],
     commonGenres: ["Y2K Pop", "Hip Hop"],
@@ -32,7 +29,7 @@ const friendsData = [
     id: 3,
     username: "JordN",
     displayName: "Jordan Lee",
-    profilePic: "https://i.pravatar.cc/150?img=3",
+    profilePic: "",
     matchPercentage: 85,
     commonArtists: ["Daft Punk", "The Prodigy"],
     commonGenres: ["Trance", "Hip Hop"],
@@ -42,7 +39,7 @@ const friendsData = [
     id: 4,
     username: "C8LYN",
     displayName: "Caitlyn",
-    profilePic: "https://i.pravatar.cc/150?img=5",
+    profilePic: "",
     matchPercentage: 95,
     commonArtists: ["Lady Gaga", "Taylor Swift", "Ariana Grande"],
     commonGenres: ["Pop", "Dance Pop", "R&B"],
@@ -169,12 +166,9 @@ const FriendsPage = () => {
                       <MessageCircle size={16} />
                       Message
                     </button>
-                    <Link
-                      to={`/profile/${friend.username}`}
-                      className="px-4 py-2 rounded-full border-2 border-[#3adfd4] text-[#3adfd4] font-bold hover:bg-[#3adfd4]/10 transition-colors pixel-body-font"
-                    >
+                    <button className="px-4 py-2 rounded-full border-2 border-[#3adfd4]/30 text-[#3adfd4]/50 font-bold cursor-not-allowed pixel-body-font">
                       View Profile
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
