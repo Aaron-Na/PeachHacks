@@ -122,37 +122,37 @@ const NavMenuItem = ({ icon: Icon, label }: { icon: React.ElementType, label: st
 };
 
 // Feature card with PSP/PS2 style
-const FeatureCard = ({ icon: Icon, title, description, buttonText, color }: 
-  { icon: React.ElementType, title: string, description: string, buttonText: string, color: string }) => {
-  
+const FeatureCard = ({ icon: Icon, title, description, buttonText, color, link }: { 
+  icon: React.ElementType, 
+  title: string, 
+  description: string, 
+  buttonText: string, 
+  color: string,
+  link: string 
+}) => {
   const [hovered, setHovered] = useState(false);
   
   const springProps = useSpring({
-    transform: hovered ? 'scale(1.05) translateY(-5px)' : 'scale(1) translateY(0px)',
-    boxShadow: hovered 
-      ? '0 15px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 119, 170, 0.5)' 
-      : '0 5px 15px rgba(0, 0, 0, 0.2), 0 0 5px rgba(255, 119, 170, 0.3)',
-    config: { tension: 300, friction: 20 },
+    transform: hovered ? 'scale(1.05)' : 'scale(1)',
+    config: { tension: 300, friction: 10 },
   });
   
   return (
-    <animated.div 
+    <animated.div
       style={springProps}
-      className="holographic-card relative overflow-hidden rounded-lg p-6"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      className="relative p-6 border-2 border-[#C0C0C0] rounded-lg bg-[#1A1A2E]/60 backdrop-blur-sm"
     >
+      <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-10 rounded-lg`} />
       <div className="relative z-10">
-        <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gradient-to-br ${color}`}>
-          <Icon className="w-8 h-8 text-white" />
-        </div>
-        <h3 className="text-xl font-bold text-white mb-2 text-center pixel-font">{title}</h3>
-        <p className="text-white/80 mb-6 text-center pixel-body-font">{description}</p>
-        <button className="chrome-orb-button w-full">
+        <Icon className="w-12 h-12 text-white mb-4" />
+        <h3 className="text-xl font-bold text-white mb-2 pixel-font glow-text">{title}</h3>
+        <p className="text-[#C0C0C0] mb-6 pixel-body-font">{description}</p>
+        <Link to={link} className="chrome-button">
           {buttonText}
-        </button>
+        </Link>
       </div>
-      <div className="holographic-overlay absolute inset-0"></div>
     </animated.div>
   );
 };
@@ -293,58 +293,71 @@ function App() {
               <div className="cd-shadow w-64 h-8 bg-black/30 blur-md rounded-full mx-auto -mt-4"></div>
             </div>
             
-            <button className="chrome-orb-button text-lg px-8 py-3 mb-8 animate-pulse-slow">
-              Start Matching
-            </button>
-          </div>
-          
-          {/* Feature Cards */}
-          <div className="grid md:grid-cols-3 gap-8 mt-16">
-            <FeatureCard 
-              icon={Users} 
-              title="Match Making" 
-              description="Find friends based on your music taste and shared vibes" 
-              buttonText="Find Matches"
-              color="from-[#ff77aa] to-[#7f5fc5]"
-            />
+            <div className="text-center max-w-4xl mx-auto">
+              <h1 className="text-5xl font-bold text-white mb-6 pixel-font glow-text">
+                Find Your Music Match
+              </h1>
+              <p className="text-xl text-[#C0C0C0] mb-8 pixel-body-font">
+                Connect with people who share your Y2K music taste and vibe
+              </p>
+              <div className="flex justify-center">
+                <Link to="/match" className="chrome-button text-lg px-8 py-4">
+                  Start Matching
+                </Link>
+              </div>
+            </div>
             
-            <FeatureCard 
-              icon={UserCog} 
-              title="Profile Management" 
-              description="Customize your Y2K inspired digital ID card"
-              buttonText="Edit Profile"
-              color="from-[#00B4B4] to-[#3adfd4]"
-            />
+            {/* Feature Cards */}
+            <div className="grid md:grid-cols-3 gap-8 mt-16">
+              <FeatureCard 
+                icon={Users} 
+                title="Match Making" 
+                description="Find friends based on your music taste and shared vibes" 
+                buttonText="Find Matches"
+                color="from-[#ff77aa] to-[#7f5fc5]"
+                link="/match"
+              />
+              
+              <FeatureCard 
+                icon={UserCog} 
+                title="Profile Management" 
+                description="Customize your Y2K inspired digital ID card"
+                buttonText="Edit Profile"
+                color="from-[#00B4B4] to-[#3adfd4]"
+                link="/profile"
+              />
+              
+              <FeatureCard 
+                icon={Sparkles} 
+                title="Music Discovery" 
+                description="Find your next favorite song through your new connections"
+                buttonText="Coming Soon"
+                color="from-[#ff77aa] to-[#00B4B4]"
+                link="#"
+              />
+            </div>
             
-            <FeatureCard 
-              icon={Sparkles} 
-              title="Music Discovery" 
-              description="Find your next favorite song through your new connections"
-              buttonText="Explore Music"
-              color="from-[#ff77aa] to-[#00B4B4]"
-            />
-          </div>
-          
-          {/* MySpace-inspired Testimonials */}
-          <div className="mt-24 mb-16">
-            <h2 className="text-3xl font-bold text-center text-white mb-8 pixel-font glow-text">Top Friends</h2>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((id) => (
-                <div key={id} className="friend-card p-4 border-2 border-[#C0C0C0] rounded-lg bg-[#1A1A2E]/60 backdrop-blur-sm">
-                  <div className="w-full aspect-square mb-2 bg-gradient-to-br from-[#7FD1DE] to-[#00B4B4] rounded-md overflow-hidden flex items-center justify-center">
-                    <div className="text-2xl font-bold text-white">#{id}</div>
-                  </div>
-                  <p className="text-white text-center pixel-body-font truncate">Music Friend {id}</p>
-                  <div className="flex justify-center mt-2">
-                    <div className="music-bars">
-                      <div className="bar bar1"></div>
-                      <div className="bar bar2"></div>
-                      <div className="bar bar3"></div>
+            {/* MySpace-inspired Testimonials */}
+            <div className="mt-24 mb-16">
+              <h2 className="text-3xl font-bold text-center text-white mb-8 pixel-font glow-text">Top Friends</h2>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[1, 2, 3, 4].map((id) => (
+                  <div key={id} className="friend-card p-4 border-2 border-[#C0C0C0] rounded-lg bg-[#1A1A2E]/60 backdrop-blur-sm">
+                    <div className="w-full aspect-square mb-2 bg-gradient-to-br from-[#7FD1DE] to-[#00B4B4] rounded-md overflow-hidden flex items-center justify-center">
+                      <div className="text-2xl font-bold text-white">#{id}</div>
+                    </div>
+                    <p className="text-white text-center pixel-body-font truncate">Music Friend {id}</p>
+                    <div className="flex justify-center mt-2">
+                      <div className="music-bars">
+                        <div className="bar bar1"></div>
+                        <div className="bar bar2"></div>
+                        <div className="bar bar3"></div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
