@@ -5,7 +5,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 import uuid
-import match_logic
 from match_logic import find_best_match
 from spotify_app import register_spotify_routes
 
