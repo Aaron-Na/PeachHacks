@@ -51,8 +51,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, onLike, onDislike })
     >
       <div className="bg-[#1A1A2E] border-2 border-[#C0C0C0] rounded-xl overflow-hidden shadow-xl relative">
         {/* Profile Image */}
-        <div className="aspect-square w-full bg-gradient-to-br from-[#7FD1DE] to-[#00B4B4] flex items-center justify-center">
-          <span className="text-6xl font-bold text-white pixel-font">{profile.displayName[0]}</span>
+        <div className="aspect-square w-full bg-gradient-to-br from-[#7FD1DE] to-[#00B4B4] flex items-center justify-center overflow-hidden">
+          {profile.profilePic ? (
+            <img 
+              src={profile.profilePic} 
+              alt={`${profile.displayName}'s profile`} 
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <span className="text-6xl font-bold text-white pixel-font">{profile.displayName[0]}</span>
+          )}
         </div>
 
         {/* Profile Info */}
@@ -62,7 +70,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, onLike, onDislike })
             <p className="text-[#C0C0C0] text-sm pixel-body-font">@{profile.username}</p>
           </div>
 
-          <p className="text-white mb-6 text-center pixel-body-font">{profile.bio}</p>
+          <p className="text-white mb-6 text-left pixel-body-font whitespace-pre-line">{profile.bio}</p>
 
           {/* Action Buttons */}
           <div className="flex justify-center space-x-4 mt-6">

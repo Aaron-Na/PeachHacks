@@ -24,24 +24,24 @@ interface Match {
 
 const mockProfiles: Profile[] = [
   {
-    username: "RetroWave_Alice",
+    username: "Alice_y2k",
     displayName: "Alice",
-    profilePic: "/static/profile_images/alice.jpg",
-    bio: "90s music enthusiast. Living in a digital wonderland!",
+    profilePic: "./static/profile_images/asian-woman-posing-looking-camera_23-2148255359.webp",
+    bio: "top 5 artists: Spice Girls, Backstreet Boys, Britney Spears, *NSYNC, Destiny's Child\nlocation: Cyber Valley, CA\nage: 24\nfavorite song: \"...Baby One More Time\"",
     stats: { friends: 35, playlists: 8, matches: 15 }
   },
   {
-    username: "VaporBob",
+    username: "Bob_y2k",
     displayName: "Bob",
-    profilePic: "/static/profile_images/bob.jpg",
-    bio: "Vaporwave and synthwave are my aesthetic",
+    profilePic: "./static/profile_images/man-6477129_640.webp",
+    bio: "top 5 artists: Linkin Park, Blink-182, Green Day, No Doubt, Red Hot Chili Peppers\nlocation: Digital Heights, NY\nage: 26\nfavorite song: \"In The End\"",
     stats: { friends: 28, playlists: 12, matches: 20 }
   },
   {
-    username: "Y2K_Charlie",
+    username: "Charlie_y2k",
     displayName: "Charlie",
-    profilePic: "/static/profile_images/charlie.jpg",
-    bio: "Collecting virtual friends and digital memories",
+    profilePic: "./static/profile_images/portrait-bangladeshi-man_53876-39178.webp",
+    bio: "top 5 artists: Aaliyah, TLC, Usher, Alicia Keys, Mariah Carey\nlocation: Soul Valley, GA\nage: 25\nfavorite song: \"No Scrubs\"",
     stats: { friends: 45, playlists: 15, matches: 25 }
   }
 ];
