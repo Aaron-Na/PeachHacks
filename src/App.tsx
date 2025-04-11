@@ -332,7 +332,7 @@ function App() {
                 icon={Sparkles} 
                 title="Music Discovery" 
                 description="Find your next favorite song through your new connections"
-                buttonText="Coming Soon"
+                buttonText="Try Something New"
                 color="from-[#ff77aa] to-[#00B4B4]"
                 link="#"
               />
