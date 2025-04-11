@@ -10,8 +10,6 @@ interface Profile {
   displayName: string;
   profilePic: string;
   bio: string;
-  topArtists: string[];
-  favoriteGenres: string[];
   stats: {
     friends: number;
     playlists: number;
@@ -30,8 +28,6 @@ const mockProfiles: Profile[] = [
     displayName: "Alice",
     profilePic: "/static/profile_images/alice.jpg",
     bio: "90s music enthusiast. Living in a digital wonderland!",
-    topArtists: ["Madonna", "Spice Girls", "Aqua", "Eiffel 65"],
-    favoriteGenres: ["Pop", "Eurodance", "Trance"],
     stats: { friends: 35, playlists: 8, matches: 15 }
   },
   {
@@ -39,8 +35,6 @@ const mockProfiles: Profile[] = [
     displayName: "Bob",
     profilePic: "/static/profile_images/bob.jpg",
     bio: "Vaporwave and synthwave are my aesthetic",
-    topArtists: ["The Prodigy", "Chemical Brothers", "Moby"],
-    favoriteGenres: ["Vaporwave", "Synthwave", "Electronic"],
     stats: { friends: 28, playlists: 12, matches: 20 }
   },
   {
@@ -48,29 +42,14 @@ const mockProfiles: Profile[] = [
     displayName: "Charlie",
     profilePic: "/static/profile_images/charlie.jpg",
     bio: "Collecting virtual friends and digital memories",
-    topArtists: ["Britney Spears", "NSYNC", "Backstreet Boys"],
-    favoriteGenres: ["Y2K Pop", "Boy Bands", "Teen Pop"],
     stats: { friends: 45, playlists: 15, matches: 25 }
   }
 ];
 
 // Simplified compatibility calculation
-const calculateCompatibility = (profile1: Profile, profile2: Profile): number => {
-  let score = 0;
-  
-  // Compare genres
-  const commonGenres = profile1.favoriteGenres.filter(genre => 
-    profile2.favoriteGenres.includes(genre)
-  ).length;
-  score += (commonGenres / Math.max(profile1.favoriteGenres.length, profile2.favoriteGenres.length)) * 50;
-
-  // Compare artists
-  const commonArtists = profile1.topArtists.filter(artist => 
-    profile2.topArtists.includes(artist)
-  ).length;
-  score += (commonArtists / Math.max(profile1.topArtists.length, profile2.topArtists.length)) * 50;
-
-  return Math.round(score);
+const calculateCompatibility = (): number => {
+  // For demo purposes, generate a random compatibility score
+  return Math.floor(Math.random() * 100);
 };
 
 // Component for Y2K geometric shapes floating around
@@ -133,20 +112,9 @@ const RandomSparkles = ({ count = 15 }) => {
   return <div className="fixed inset-0 pointer-events-none z-10">{sparkles}</div>;
 };
 
-const DiscoverPage = () => {
+const MatchMaker = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [likedProfiles, setLikedProfiles] = useState<Match[]>([]);
-
-  // Mock current user profile for compatibility calculation
-  const currentUserProfile: Profile = {
-    username: "CurrentUser",
-    displayName: "You",
-    profilePic: "",
-    bio: "",
-    topArtists: ["Madonna", "The Prodigy", "Britney Spears", "Moby"],
-    favoriteGenres: ["Pop", "Electronic", "Y2K Pop"],
-    stats: { friends: 0, playlists: 0, matches: 0 }
-  };
 
   // Page fade-in animation
   const fadeIn = useSpring({
@@ -166,7 +134,7 @@ const DiscoverPage = () => {
 
   const handleLike = () => {
     const currentProfile = mockProfiles[currentIndex];
-    const compatibility = calculateCompatibility(currentUserProfile, currentProfile);
+    const compatibility = calculateCompatibility();
     setLikedProfiles(prev => [...prev, { profile: currentProfile, compatibility }]);
     console.log("Liked:", currentProfile.displayName, "Compatibility:", compatibility + "%");
     randomizeProfile();
@@ -265,4 +233,4 @@ const DiscoverPage = () => {
   );
 };
 
-export default DiscoverPage;
+export default MatchMaker;
