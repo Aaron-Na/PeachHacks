@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-tailwindcss"
+  ],
+  "rules": {
+    "at-rule-no-unknown": null,
+    "function-no-unknown": null,
+    "property-no-unknown": null,
+    "selector-class-pattern": null,
+    "no-descending-specificity": null
+  }
+}

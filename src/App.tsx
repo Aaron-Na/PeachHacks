@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSpring, animated, useTrail } from '@react-spring/web';
-import { Music2, Users, UserCog, Sparkles, LogIn, Star, Heart, Disc, Play, Square, PlusSquare, UserPlus } from 'lucide-react';
+import { Music2, Users, UserCog, Sparkles, LogIn, Star, Heart, Disc, Play, Square, PlusSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Component for animated Y2K cursor trail
@@ -23,7 +23,7 @@ const CursorTrail = () => {
     <div className="cursor-trail fixed inset-0 pointer-events-none z-50">
       {trail.map((position, i) => (
         <div
-          key={position.id}
+          key={`${position.id}-${i}`}
           className="absolute w-5 h-5 rounded-full"
           style={{
             left: position.x - 8,
@@ -99,7 +99,7 @@ const RandomSparkles = ({ count = 15 }) => {
 };
 
 // NavMenuItem component with hover animation
-const NavMenuItem = ({ icon: Icon, label, to }: { icon: React.ElementType, label: string, to?: string }) => {
+const NavMenuItem = ({ icon: Icon, label }: { icon: React.ElementType, label: string }) => {
   const [hovered, setHovered] = useState(false);
   
   const animationProps = useSpring({
@@ -108,7 +108,7 @@ const NavMenuItem = ({ icon: Icon, label, to }: { icon: React.ElementType, label
     config: { tension: 300, friction: 10 },
   });
   
-  const content = (
+  return (
     <animated.div
       className="flex flex-col items-center p-2 cursor-pointer"
       style={animationProps}
@@ -119,12 +119,6 @@ const NavMenuItem = ({ icon: Icon, label, to }: { icon: React.ElementType, label
       <span className="text-xs mt-1 font-bold">{label}</span>
     </animated.div>
   );
-
-  return to ? (
-    <Link to={to} className="text-white hover:text-white">
-      {content}
-    </Link>
-  ) : content;
 };
 
 // Feature card with PSP/PS2 style
@@ -215,17 +209,12 @@ function App() {
           
           <div className="flex items-center space-x-4">
             <div className="hidden md:flex items-center space-x-3">
-              <NavMenuItem icon={Users} label="Friends" to="/friends" />
+              <NavMenuItem icon={Users} label="Friends" />
               <NavMenuItem icon={Disc} label="Discover" />
               <Link to="/profile" className="no-underline">
                 <NavMenuItem icon={UserCog} label="Profile" />
               </Link>
             </div>
-            
-            <Link to="/register" className="chrome-button flex items-center space-x-2 mr-2">
-              <UserPlus className="w-5 h-5" />
-              <span>Register</span>
-            </Link>
             
             <div className="relative" ref={loginRef}>
               <button 
