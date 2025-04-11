@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Discover • MySpace Playlist Matchmaker</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fff;
+      color: #000;
+      padding: 2rem;
+    }
+
+    h1, h2 {
+      margin-bottom: 1rem;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: #f0f0f0;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+      :root {
+      --main-bg: #fff;
+      --card-bg: #f0f0f0;
+      --accent-color: #ff66cc;
+      --text-color: #000;
+    }
+
+    body {
+      background-color: var(--main-bg);
+      color: var(--text-color);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 2px solid var(--accent-color);
+      box-shadow: 0 0 8px var(--accent-color);
+    }
+
+    button {
+      background-color: var(--accent-color);
+    }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🎶 MySpace Playlist Matchmaker</h1>
+  </header>
+
+  <main>
+    <section class="section" id="top-tracks">
+      <h2>Your Top Tracks</h2>
+      <div class="card-grid">
+        <!-- Top tracks go here -->
+      </div>
+    </section>
+
+    <section class="section" id="popular-2000s">
+      <h2>What's New with Popular 2000's</h2>
+      <div class="card-grid">
+        <!-- 2000s hits go here -->
+      </div>
+    </section>
+
+    <section class="section" id="friends-top">
+      <h2>Your Friends' Top Track</h2>
+      <div class="card-grid">
+        <!-- Friend's top track goes here -->
+      </div>
+    </section>
+
+    <section class="section" id="discover-friends">
+  <h2 style="font-family: 'Comic Sans MS', cursive; color: #ff66cc; font-size: 1.8rem; text-shadow: 1px 1px #000;">★ Discover New Friends ★</h2>
+  <div class="card-grid">
+    <div class="card">
+      <img src="https://i.pravatar.cc/100?u=alex" alt="Alex">
+      <h3>Alex Milway</h3>
+      <button style="background-color: #ff66cc; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">+ Add</button>
+    </div>
+    <div class="card">
+      <img src="https://i.pravatar.cc/100?u=aston" alt="Aston">
+      <h3>Aston Leach</h3>
+      <button style="background-color: #ff66cc; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">+ Add</button>
+    </div>
+    <div class="card">
+      <img src="https://i.pravatar.cc/100?u=barry" alt="Barry">
+      <h3>Barry Collins</h3>
+      <button style="background-color: #ff66cc; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">+ Add</button>
+    </div>
+    <div class="card">
+      <img src="https://i.pravatar.cc/100?u=chris" alt="Chris">
+      <h3>Christopher Phin</h3>
+      <button style="background-color: #ff66cc; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">+ Add</button>
+    </div>
+  </div>
+</section>
+
+    <section class="section" id="more-friends">
+      <h2 style="font-family: 'Comic Sans MS', cursive; color: #00ff88; font-size: 1.8rem; text-shadow: 1px 1px #000;">☆ More Friends You May Know ☆</h2>
+      <div class="card-grid">
+        <div class="card">
+          <img src="https://i.pravatar.cc/100?u=jen" alt="Jen">
+          <h3>Jen Rivera</h3>
+          <button style="color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">+ Add</button>
+        </div>
+        <div class="card">
+          <img src="https://i.pravatar.cc/100?u=drew" alt="Drew">
+          <h3>Drew Sakamoto</h3>
+          <button style="color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">+ Add</button>
+        </div>
+        <div class="card">
+          <img src="https://i.pravatar.cc/100?u=sam" alt="Sam">
+          <h3>Sam Thomas</h3>
+          <button style="color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">+ Add</button>
+        </div>
+        <div class="card">
+          <img src="https://i.pravatar.cc/100?u=keisha" alt="Keisha">
+          <h3>Keisha Allen</h3>
+          <button style="color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">+ Add</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Made with 💖 by Aaron & Team</p>
+  </footer>
+</body>
+</html>

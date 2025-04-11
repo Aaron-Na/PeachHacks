@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple DMs</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='chat_style.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100" id="page-body">
+  <div class="max-w-xl mx-auto mt-10 p-4 shadow-lg rounded-lg" id="chat-container" style="background-color: #ffffff;">
+    <div class="mb-2">
+      <label for="username" class="block text-sm font-bold mb-1">Enter Your Name:</label>
+      <input id="username" type="text" placeholder="Your name..." class="w-full mb-3 p-2 border rounded" />
+
+      <label for="avatar-picker" class="block text-sm font-bold mb-1">Choose Your Avatar:</label>
+      <select id="avatar-picker" class="w-full mb-3 p-2 border rounded">
+        <option selected value="https://i.imgur.com/lnJjUUL.jpeg">Star Orbit (Imgur)</option>
+        <option value="https://i.imgur.com/dNKCcT0.png">Purple Sparkle Crown</option>
+        <option value="https://i.imgur.com/27I4VOc.jpeg">Blush Bloom</option>
+        <option value="https://i.imgur.com/7UxFjK9.jpeg">DreamCore Drip</option>
+      </select>
+
+      <label for="glitter-picker" class="block text-sm font-bold mb-1">Choose Glitter Effect:</label>
+      <select id="glitter-picker" class="w-full mb-3 p-2 border rounded">
+        <option value="">None</option>
+        <option value="https://i.imgur.com/MZ3Wy6Y.gif">Pink Sparkle</option>
+        <option value="https://i.imgur.com/yXsovJH.gif">Gold Glitter</option>
+        <option value="https://i.imgur.com/RtrZ7kM.gif">Blue Fire</option>
+      </select>
+
+      <label for="bg-picker" class="block text-sm font-bold mb-1">Choose Chat Background:</label>
+      <select id="bg-picker" class="w-full mb-3 p-2 border rounded">
+        <option value="#ffffff">White</option>
+        <option value="#ffccf9">Pink</option>
+        <option value="#d0f0fd">Sky Blue</option>
+        <option value="url('https://i.imgur.com/Qs9eUjT.jpg')">MySpace Theme (Image)</option>
+      </select>
+
+      <label for="page-bg-picker" class="block text-sm font-bold mb-1">Choose Website Background:</label>
+      <select id="page-bg-picker" class="w-full p-2 border rounded">
+        <option value="">Default</option>
+        <option value="url('https://static-www.adweek.com/wp-content/uploads/2023/02/Messenger-Valentines-Day-Chat-Theme-Hero.png?w=600&h=315&crop=1')">Valentine Y2K</option>
+        <option value="url('https://img.bizbash.com/files/base/bizbash/bzb/image/2023/07/16_copy.64a84870b6345.png?auto=format%2Ccompress&q=70&w=400')">BizBash Neon</option>
+        <option value="url('https://themeplaza.art/download/58513/preview')">ThemePlaza Preview</option>
+        <option value="url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPhJWmno0HBArrU88WwR1O6KYZXoAfcNwK-w&s')">Y2K Vibes</option>
+      </select>
+    </div>
+
+    <div id="messages" class="h-96 overflow-y-scroll space-y-2 p-2 border border-gray-200 rounded bg-opacity-60"></div>
+
+    <input id="chat-input" type="text" placeholder="Type your message..."
+      class="w-full mt-3 p-2 border border-gray-300 rounded" />
+  </div>
+
+  <script src="{{ url_for('static', filename='chat_interaction.js') }}"></script>
+</body>
+</html>

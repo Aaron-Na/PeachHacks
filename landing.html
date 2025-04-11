@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Discover • MySpace Playlist Matchmaker</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --main-bg: #fff;
+      --card-bg: #fff;
+      --accent-color: #e60026;
+      --text-color: #000;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: var(--main-bg);
+      color: var(--text-color);
+      padding: 2rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .artist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .track-card {
+      background: var(--card-bg);
+      padding: 1rem;
+      border: 2px solid var(--accent-color);
+      border-radius: 10px;
+      box-shadow: 0 0 8px var(--accent-color);
+      text-align: center;
+    }
+
+    .track-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+
+    .theme-switcher button {
+      margin-right: 10px;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎿 Discover Your Playlist People</h1>
+    <nav>
+      <a href="/profile">My Profile</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+
+  <div class="theme-switcher">
+    <button onclick="setTheme('red')">Retro Red</button>
+    <button onclick="setTheme('pink')">Retro Pink</button>
+    <button onclick="setTheme('green')">Green Vibe</button>
+  </div>
+
+  <main>
+    <section class="top-artists">
+      <h2>Your Top Tracks</h2>
+      <div id="trackContainer" class="artist-grid">
+        <!-- Songs will appear here -->
+      </div>
+    </section>
+
+    <section class="popular-2000s">
+      <h2>What's New with Popular 2000's</h2>
+      <div id="popular2000sContainer" class="artist-grid">
+        <!-- 2000s hits will appear here -->
+      </div>
+    </section>
+
+    <section class="friends-top-track">
+      <h2>Your Friends' Top Track</h2>
+      <div id="friendsTopTrackContainer" class="artist-grid">
+        <!-- Placeholder for friends' top track -->
+      </div>
+    </section>
+
+$1
+    <p>Made with 💖 by Aaron & Team</p>
+  </footer>
+
+  <script>
+    const token = 'BQBQuIMnObZ7HbMsh0b6_VvzMhA25p6iHlL6yIC53VgPZHbonBTedtRBAq3t9vD4_XsoBB_EO2LVa520jDCVo_F8_XnyP-Z4b2uWqC9eeme9_NKjQhnnLSt6Ti2J7azSwrQIZjzMxyhdYirPJCnRMDUXpLjv5x7stE2mdGb5_8tcU8RxApCuu3exFSxaZcvRcFphqIukUycVtxSyDt9rNzMAhAfoCyA-v5GqnbE-oe0k_IWKjGYsD-mtPW_z_YiZC2nQnoFXb9wbkUhA_rUv7IMxwGVqRi4IRw'; // Replace with valid token
+
+    async function fetchWebApi(endpoint, method, body) {
+      const res = await fetch(`https://api.spotify.com/${endpoint}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method,
+        body: JSON.stringify(body)
+      });
+      return await res.json();
+    }
+
+    async function getTopTracks(){
+      const data = await fetchWebApi('v1/me/top/tracks?time_range=long_term&limit=5', 'GET');
+      return data.items;
+    }
+
+    async function displayTopTracks() {
+      const tracks = await getTopTracks();
+      const container = document.getElementById('trackContainer');
+
+      tracks.forEach(track => {
+        const card = document.createElement('div');
+        card.className = 'track-card';
+
+        card.innerHTML = `
+          <img src="${track.album.images[0].url}" alt="${track.name}">
+          <h3>${track.name}</h3>
+          <p>${track.artists.map(a => a.name).join(', ')}</p>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function setTheme(theme) {
+      if (theme === 'red') {
+        document.documentElement.style.setProperty('--main-bg', '#1a0000');
+        document.body.style.backgroundImage = 'none';
+        document.documentElement.style.setProperty('--card-bg', '#330000');
+        document.documentElement.style.setProperty('--accent-color', '#ff0033');
+        document.documentElement.style.setProperty('--text-color', '#fff');
+      } else if (theme === 'pink') {
+        document.documentElement.style.setProperty('--main-bg', '#1a001a');
+        document.body.style.backgroundImage = 'none';
+        document.documentElement.style.setProperty('--card-bg', '#330033');
+        document.documentElement.style.setProperty('--accent-color', '#ff66cc');
+        document.documentElement.style.setProperty('--text-color', '#fff');
+      } else if (theme === 'green') {
+        document.documentElement.style.setProperty('--main-bg', '#002b1a');
+        document.body.style.backgroundImage = 'none';
+        document.documentElement.style.setProperty('--card-bg', '#003d26');
+        document.documentElement.style.setProperty('--accent-color', '#00ff88');
+        document.documentElement.style.setProperty('--text-color', '#eafff5');
+      }
+    }
+
+    displayTopTracks();
+  
+
+    async function displayPopular2000s() {
+      const searchQuery = '2000s hits';
+      const res = await fetchWebApi(`v1/search?q=${encodeURIComponent(searchQuery)}&type=track&limit=5`, 'GET');
+      const tracks = res.tracks.items;
+      const container = document.getElementById('popular2000sContainer');
+
+      tracks.forEach(track => {
+        const card = document.createElement('div');
+        card.className = 'track-card';
+
+        card.innerHTML = `
+          <img src="${track.album.images[0].url}" alt="${track.name}">
+          <h3>${track.name}</h3>
+          <p>${track.artists.map(a => a.name).join(', ')}</p>
+        `;x 
+
+        container.appendChild(card);
+      });
+    }
+
+    displayPopular2000s();
+  </script>
+</body>
+</html>
